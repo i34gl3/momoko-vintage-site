@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6F3EC">
+<title>Momoko Vintage – vintage és designer second hand bolt Budapesten</title>
+<meta name="description" content="Válogatott vintage és modern klasszikusok: ruhák, cipők, táskák és kiegészítők a Palotanegyedben. Budapest, Krúdy utca 9. Minden hétfőn heti újratöltés.">
+<meta property="og:title" content="Momoko Vintage">
+<meta property="og:description" content="Curated selection of vintage and modern classics in Budapest's Palace Quarter. Krúdy utca 9.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ClothingStore",
+  "name": "Momoko Vintage",
+  "description": "Curated selection of vintage and modern classics. Clothing, footwear, bags and accessories in Budapest's Palace Quarter.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Krúdy utca 9",
+    "postalCode": "1088",
+    "addressLocality": "Budapest",
+    "addressCountry": "HU"
+  },
+  "telephone": "+36306170265",
+  "openingHoursSpecification": [
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "11:00", "closes": "20:00"},
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "10:00", "closes": "19:00"},
+    {"@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "12:00", "closes": "18:00"}
+  ],
+  "email": "info@momokovintage.com",
+  "sameAs": ["https://www.instagram.com/momoko_vintage/", "https://www.facebook.com/momokovintage", "https://www.tiktok.com/@momoko_vintage"]
+}
+</script>
+<style>
+/* Momoko Vintage, editorial look (Nov 2026).
+   Warm off-white, white and black sections; square corners only; thin lines.
+   Olive is kept for the small "open now" marker. */
+:root {
+  --paper: #F6F3EC;
+  --white: #FFFFFF;
+  --ink: #141413;
+  --olive: #6F7140;
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --soft: rgba(20, 20, 19, 0.62);
+  --line: rgba(20, 20, 19, 0.16);
+  --font: "Courier New", "Courier Prime", Courier, monospace;
+}
+.dark {
+  --bg: var(--ink);
+  --fg: var(--paper);
+  --soft: rgba(246, 243, 236, 0.66);
+  --line: rgba(246, 243, 236, 0.24);
+}
+.white { --bg: var(--white); }
+
+* { box-sizing: border-box; border-radius: 0; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+section, footer, header { background: var(--bg); color: var(--fg); }
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 1px solid currentColor; outline-offset: 3px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.wrap { width: min(1240px, 100% - 2.5rem); margin-inline: auto; }
+
+/* Small uppercase label style, used for headings, buttons and meta text */
+.label, .btn, .s-title, .top-status, .lang, .g-count, .restock, .hours th, .district {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.logo {
+  display: block;
+  aspect-ratio: 1740 / 534;
+  background: currentColor;
+  -webkit-mask: url("img/logo.png") no-repeat left center / contain;
+  mask: url("img/logo.png") no-repeat left center / contain;
+}
+
+/* ---------- Pinned top bar ---------- */
+.top {
+  position: sticky; top: 0; z-index: 30;
+  border-bottom: 1px solid var(--line);
+}
+.top .wrap {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  height: 64px;
+}
+.top-logo { width: 112px; color: var(--ink); }
+.top-home { transition: opacity 0.3s, visibility 0.3s; }
+.top.at-top .top-home { opacity: 0; visibility: hidden; }
+
+/* Big logo above the photos */
+.brand { padding-block: 1.75rem 1.5rem; }
+.brand-title { margin: 0; }
+.brand-logo { width: 100%; margin-inline: auto; color: var(--ink); -webkit-mask-position: center; mask-position: center; }
+.top-status {
+  justify-self: center;
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+}
+.top-status .dot { width: 7px; height: 7px; background: var(--olive); flex: none; }
+.top-status.closed .dot { background: transparent; border: 1px solid var(--ink); }
+.lang {
+  font-family: inherit; color: inherit; background: none; border: 0;
+  padding: 0.5rem 0 0.5rem 0.5rem; cursor: pointer;
+}
+@media (hover: hover) { .lang:hover { text-decoration: underline; text-underline-offset: 4px; } }
+
+/* ---------- Photos ---------- */
+.gallery { background: var(--paper); }
+.track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  gap: 2px;
+  outline: none;
+}
+.track::-webkit-scrollbar { display: none; }
+.slide {
+  flex: 0 0 100%;
+  margin: 0;
+  scroll-snap-align: start;
+  aspect-ratio: 4 / 5;
+  background: #E8E3D8;
+  overflow: hidden;
+}
+.slide img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
+.g-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-block: 0.9rem 0;
+}
+.g-bar[hidden] { display: none; }
+.g-btns { display: flex; gap: 0.5rem; }
+.g-btn {
+  width: 40px; height: 40px; display: inline-grid; place-items: center;
+  background: transparent; color: var(--ink); border: 1px solid var(--ink);
+  cursor: pointer; padding: 0;
+}
+.g-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.4; }
+@media (hover: hover) { .g-btn:hover { background: var(--ink); color: var(--paper); } }
+.g-btn:active { background: var(--ink); color: var(--paper); }
+
+/* ---------- Intro ---------- */
+.intro { padding-block: 2.5rem 3.5rem; }
+.intro-grid { display: grid; gap: 2rem; }
+.lede {
+  font-size: 1.2rem;
+  line-height: 1.35;
+  margin: 0;
+  max-width: 30ch;
+}
+.intro-meta { display: grid; gap: 1.25rem; align-content: end; }
+.intro-meta p { margin: 0; color: var(--soft); font-size: 0.9375rem; }
+
+/* ---------- Buttons ---------- */
+.actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: 0.9rem 1.5rem;
+  border: 1px solid var(--fg); color: var(--fg); background: transparent;
+  text-decoration: none; text-align: center;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-primary { background: var(--fg); color: var(--bg); }
+@media (hover: hover) {
+  .btn:hover { background: var(--fg); color: var(--bg); }
+  .btn-primary:hover { background: transparent; color: var(--fg); }
+}
+
+/* ---------- Restock band ---------- */
+.restock { padding-block: 1.1rem; }
+.restock .wrap {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+}
+.restock p { margin: 0; }
+.restock-next { border: 1px solid var(--line); padding: 0.45rem 0.8rem; color: var(--soft); }
+
+/* ---------- Sections ---------- */
+.block { padding-block: 3.5rem; }
+.s-title {
+  margin: 0 0 1.75rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--fg);
+  display: flex; justify-content: space-between; gap: 1rem;
+}
+.s-title .num { color: var(--soft); }
+
+/* Social links: Jil Sander style rows */
+.social-links { border-top: 1px solid var(--line); }
+.s-link {
+  display: flex; align-items: center; gap: 0.9rem;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  font-size: 0.9375rem; font-weight: 700;
+}
+.s-link span { text-transform: lowercase; flex: 1; }
+.s-link svg.brand-icon { width: 18px; height: 18px; fill: currentColor; flex: none; shape-rendering: geometricPrecision; }
+.s-link .arrow { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.3; flex: none; transition: transform 0.2s; }
+@media (hover: hover) { .s-link:hover .arrow { transform: translate(2px, -2px); } .s-link:hover span { text-decoration: underline; text-underline-offset: 4px; } }
+.s-soon { color: var(--soft); cursor: default; }
+
+/* Visit */
+.visit-grid { display: grid; gap: 2.25rem; }
+.address { font-size: 1.2rem; font-weight: 700; line-height: 1.3; margin: 0; }
+.district { display: block; margin-top: 0.4rem; color: var(--soft); }
+.hours { width: 100%; border-collapse: collapse; margin: 1.75rem 0 1.5rem; }
+.hours th, .hours td { padding: 0.8rem 0; border-bottom: 1px solid var(--line); text-align: left; }
+.hours tr:first-child th, .hours tr:first-child td { border-top: 1px solid var(--line); }
+.hours th { font-weight: 700; }
+.hours td { text-align: right; font-variant-numeric: tabular-nums; font-size: 0.9375rem; }
+.hours tr.today th::before { content: ""; display: inline-block; width: 7px; height: 7px; background: var(--fg); margin-right: 0.6rem; vertical-align: 1px; }
+.contact { margin: 0 0 1.5rem; font-size: 0.9375rem; line-height: 1.8; }
+.contact a { text-decoration: none; }
+.contact a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.visit .actions .btn { flex: 1 1 14rem; }
+.map {
+  display: block; width: 100%; aspect-ratio: 4 / 3; border: 0;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter 0.3s;
+}
+.map:hover { filter: none; }
+
+/* Footer */
+footer { padding-top: 3rem; overflow: hidden; }
+.f-grid { display: grid; gap: 1.75rem; }
+.f-grid p { margin: 0; }
+.f-small { color: var(--soft); font-size: 0.875rem; }
+.f-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-size: 0.9375rem; }
+.f-links a { text-decoration: none; }
+.f-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.f-copy { margin-top: 3rem !important; padding: 1.25rem 0 1.5rem; border-top: 1px solid var(--line); }
+
+/* ---------- Desktop ---------- */
+@media (min-width: 760px) {
+  .slide { flex-basis: calc((100% - 4px) / 3); }
+  .intro { padding-block: 3.5rem 5rem; }
+  .brand { padding-block: 2.25rem 2rem; }
+  .brand-logo { width: min(100%, 30vh * 3.26); }
+  .intro-grid { grid-template-columns: 1.4fr 1fr; gap: 4rem; }
+  .lede { font-size: clamp(1.5rem, 2.4vw, 2.1rem); line-height: 1.25; }
+  .block { padding-block: 5rem; }
+  .social-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .s-link { padding: 1.4rem 1.25rem; border-right: 1px solid var(--line); }
+  .visit-grid { grid-template-columns: 1fr 1.25fr; gap: 4rem; align-items: start; }
+  .map { aspect-ratio: auto; height: 100%; min-height: 460px; }
+  .f-grid { grid-template-columns: 2fr 1fr; align-items: start; }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 759px) {
+  body { font-size: 0.9375rem; }
+  .wrap { width: calc(100% - 2rem); }
+  .label, .btn, .s-title, .top-status, .lang, .g-count, .restock, .hours th, .district { font-size: 0.75rem; letter-spacing: 0.04em; }
+  .top .wrap { height: 54px; gap: 0.75rem; }
+  .top-logo { width: 82px; }
+  .top-status { gap: 0.45rem; }
+  .intro .actions .btn, .visit .actions .btn { flex: 1 1 100%; }
+  .restock .wrap { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 380px) {
+  .top-logo { width: 74px; }
+  .top-status, .lang { letter-spacing: 0; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="top-home" href="#top" aria-label="Momoko Vintage"><span class="logo top-logo" aria-hidden="true"></span></a>
+    <p class="top-status" id="openStatus" hidden><span class="dot" aria-hidden="true"></span><span class="st-text"></span></p>
+    <button class="lang" type="button" id="langBtn" aria-label="Switch to English">EN</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="brand" id="brand">
+    <div class="wrap">
+      <h1 class="brand-title"><span class="sr-only">Momoko Vintage</span><span class="logo brand-logo" aria-hidden="true"></span></h1>
+    </div>
+  </section>
+
+  <section class="gallery" aria-roledescription="carousel" aria-label="Momoko Vintage fotók" data-en-label="Momoko Vintage photos">
+    <div class="track" id="track"></div>
+    <div class="wrap g-bar" id="gBar" hidden>
+      <span class="g-count" id="gCount" aria-live="polite"></span>
+      <div class="g-btns">
+        <button class="g-btn" type="button" id="gPrev" aria-label="Előző fotó" data-en-label="Previous photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H4M10 6l-6 6 6 6"/></svg></button>
+        <button class="g-btn" type="button" id="gNext" aria-label="Következő fotó" data-en-label="Next photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="intro" aria-label="Momoko Vintage">
+    <div class="wrap intro-grid">
+      <p class="lede" data-en="Curated selection of vintage and modern classics. Clothing, footwear, bags and accessories.">Válogatott vintage és modern klasszikusok. Ruhák, cipők, táskák és kiegészítők.</p>
+      <div class="intro-meta">
+        <p data-en="1088 Budapest, Krúdy utca 9. Open every day of the week.">1088 Budapest, Krúdy utca 9. A hét minden napján nyitva.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=Momoko%20Vintage%2C%20Kr%C3%BAdy%20utca%209%2C%201088%20Budapest" target="_blank" rel="noopener" data-en="Get directions">Útvonaltervezés</a>
+          <a class="btn" href="https://www.instagram.com/momoko_vintage/" target="_blank" rel="noopener" data-en="New arrivals on Instagram">Újdonságok az Instagramon</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="restock dark" aria-label="Újratöltés" data-en-label="Restock">
+    <div class="wrap">
+      <p data-en="Weekly restock every Monday, with hundreds of new pieces">Minden hétfőn heti újratöltés, többszáz új darabbal</p>
+      <span class="restock-next" id="restockNext" hidden></span>
+    </div>
+  </section>
+
+  <script>
+  /* Photo carousel. Every photo in POOL can be browsed (swipe or arrows).
+     The photo shown first changes every 3 days.
+     This list is rewritten automatically when new photos are uploaded. */
+  (function () {
+    /* POOL:START */
+    var POOL = [
+    'p-202611181700-01.webp',
+    'p-202611181700-02.webp',
+    'p-202611181700-03.webp'
+    ];
+    var START = Date.UTC(2026, 10, 18);
+    /* POOL:END */
+    var track = document.getElementById('track');
+    var bar = document.getElementById('gBar');
+    var count = document.getElementById('gCount');
+    var n = POOL.length;
+    if (!track || !n) return;
+
+    var now = new Date();
+    var today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    var first = Math.max(0, Math.floor((today - START) / 86400000 / 3)) % n;
+    var order = POOL.slice(first).concat(POOL.slice(0, first));
+
+    order.forEach(function (name, i) {
+      var fig = document.createElement('figure');
+      fig.className = 'slide';
+      var img = document.createElement('img');
+      img.src = 'img/' + name;
+      img.width = 760; img.height = 1140;
+      img.alt = '';
+      img.decoding = 'async';
+      img.draggable = false;
+      if (i > 2) img.loading = 'lazy';
+      fig.appendChild(img);
+      track.appendChild(fig);
+    });
+
+    function step() { return track.firstElementChild.getBoundingClientRect().width + 2; }
+    function perView() { return Math.max(1, Math.round(track.clientWidth / step())); }
+    function index() { return Math.round(track.scrollLeft / step()); }
+    function pad(x) { return (x < 10 ? '0' : '') + x; }
+    function update() {
+      var overflow = track.scrollWidth > track.clientWidth + 4;
+      bar.hidden = !overflow;
+      if (!overflow) return;
+      var last = Math.min(n, index() + perView());
+      count.textContent = (perView() > 1 ? pad(index() + 1) + '–' + pad(last) : pad(index() + 1)) + ' / ' + pad(n);
+    }
+    function go(i) {
+      var max = n - perView();
+      if (i > max) i = 0;
+      if (i < 0) i = max;
+      track.scrollTo({ left: i * step(), behavior: 'smooth' });
+    }
+    document.getElementById('gPrev').addEventListener('click', function () { stop(); go(index() - 1); });
+    document.getElementById('gNext').addEventListener('click', function () { stop(); go(index() + 1); });
+    var raf;
+    track.addEventListener('scroll', function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+
+    /* gentle auto-advance every 5 s; stops for good once someone browses */
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var timer = null;
+    function stop() { clearInterval(timer); timer = null; }
+    ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(function (t) { track.addEventListener(t, stop, { passive: true }); });
+    if (!reduce) timer = setInterval(function () {
+      if (!document.hidden && track.scrollWidth > track.clientWidth + 4) go(index() + 1);
+    }, 5000);
+  })();
+  </script>
+
+  <section class="social white block" id="follow" aria-labelledby="social-title">
+    <div class="wrap">
+      <h2 class="s-title" id="social-title"><span data-en="Follow us">Kövess minket</span><span class="num">01</span></h2>
+      <div class="social-links">
+        <a class="s-link" href="https://www.instagram.com/momoko_vintage/" target="_blank" rel="noopener"><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg><span>instagram</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12L12 4M5.5 4H12v6.5"/></svg></a>
+        <a class="s-link" href="https://www.tiktok.com/@momoko_vintage" target="_blank" rel="noopener"><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg><span>tiktok</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12L12 4M5.5 4H12v6.5"/></svg></a>
+        <a class="s-link" href="https://www.facebook.com/momokovintage" target="_blank" rel="noopener"><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg><span>facebook</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12L12 4M5.5 4H12v6.5"/></svg></a>
+        <a class="s-link" href="https://www.google.com/maps/search/?api=1&amp;query=Momoko%20Vintage%2C%20Kr%C3%BAdy%20utca%209%2C%201088%20Budapest" target="_blank" rel="noopener"><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg><span>google</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12L12 4M5.5 4H12v6.5"/></svg></a>
+        <div class="s-link s-soon"><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5h16l-1.3 14.5H5.3L4 7.5zm4.5 0V6a3.5 3.5 0 0 1 7 0v1.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span data-en="online platforms coming soon">online platformokon is hamarosan</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit block" id="visit" aria-labelledby="visit-title">
+    <div class="wrap">
+      <h2 class="s-title" id="visit-title"><span data-en="Visit us">Látogass el hozzánk</span><span class="num">02</span></h2>
+      <div class="visit-grid">
+        <div>
+          <p class="address">Krúdy utca 9, 1088 Budapest<span class="district" data-en="Palace Quarter, 8th district">Palotanegyed, VIII. kerület</span></p>
+          <table class="hours">
+            <caption class="sr-only" data-en="Opening hours">Nyitvatartás</caption>
+            <tr><th scope="row" data-en="Monday–Friday">Hétfő–péntek</th><td>11:00–20:00</td></tr>
+            <tr><th scope="row" data-en="Saturday">Szombat</th><td>10:00–19:00</td></tr>
+            <tr><th scope="row" data-en="Sunday">Vasárnap</th><td>12:00–18:00</td></tr>
+          </table>
+          <p class="contact"><a href="tel:+36306170265">+36 30 617 0265</a><br><a href="mailto:info@momokovintage.com">info@momokovintage.com</a></p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=Momoko%20Vintage%2C%20Kr%C3%BAdy%20utca%209%2C%201088%20Budapest" target="_blank" rel="noopener" data-en="Get directions">Útvonaltervezés</a>
+            <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Momoko%20Vintage%2C%20Kr%C3%BAdy%20utca%209%2C%201088%20Budapest" target="_blank" rel="noopener" data-en="Read our Google reviews">Google értékeléseink</a>
+          </div>
+        </div>
+        <iframe class="map" title="Momoko Vintage a térképen" src="https://www.google.com/maps?q=Momoko%20Vintage%2C%20Kr%C3%BAdy%20utca%209%2C%201088%20Budapest&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="dark">
+  <div class="wrap">
+    <div class="f-grid">
+      <p class="f-small" data-en="Vintage and more. Formerly Typo Showroom.">Vintage és még sok más. Korábban Typo Showroom.</p>
+      <div>
+        <p class="label f-small" style="margin-bottom:.6rem" data-en="Contact">Kapcsolat</p>
+        <p class="f-links"><a href="mailto:info@momokovintage.com">info@momokovintage.com</a></p>
+      </div>
+    </div>
+    <p class="label f-small f-copy">© <span id="year"></span> Momoko Vintage</p>
+  </div>
+</footer>
+
+<script>
+/* Hungarian / English switch */
+(function () {
+  var btn = document.getElementById('langBtn');
+  var nodes = document.querySelectorAll('[data-en]');
+  var labels = document.querySelectorAll('[data-en-label]');
+  labels.forEach(function (n) { n.setAttribute('data-hu-label', n.getAttribute('aria-label')); });
+  nodes.forEach(function (n) { n.setAttribute('data-hu', n.innerHTML); });
+  var lang = 'hu';
+  function apply(l) {
+    nodes.forEach(function (n) { n.innerHTML = l === 'en' ? n.getAttribute('data-en') : n.getAttribute('data-hu'); });
+    labels.forEach(function (n) { n.setAttribute('aria-label', l === 'en' ? n.getAttribute('data-en-label') : n.getAttribute('data-hu-label')); });
+    document.documentElement.lang = l;
+    btn.textContent = l === 'en' ? 'HU' : 'EN';
+    btn.setAttribute('aria-label', l === 'en' ? 'Váltás magyarra' : 'Switch to English');
+    document.title = l === 'en'
+      ? 'Momoko Vintage – vintage and designer second hand in Budapest'
+      : 'Momoko Vintage – vintage és designer second hand bolt Budapesten';
+  }
+  btn.addEventListener('click', function () { lang = lang === 'hu' ? 'en' : 'hu'; apply(lang); });
+  if ((navigator.language || '').toLowerCase().indexOf('hu') !== 0) { lang = 'en'; apply('en'); }
+  document.getElementById('year').textContent = new Date().getFullYear();
+  var top = document.querySelector('.top'), brand = document.getElementById('brand');
+  if (top && brand && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (e) {
+      top.classList.toggle('at-top', e[0].isIntersecting);
+    }, { rootMargin: '-64px 0px 0px 0px' }).observe(brand);
+  }
+})();
+</script>
+<script>
+/* Live open / closed status (top bar) and restock countdown, in Budapest time */
+(function () {
+  var HOURS = {0: [12, 18], 1: [11, 20], 2: [11, 20], 3: [11, 20], 4: [11, 20], 5: [11, 20], 6: [10, 19]};
+  var status = document.getElementById('openStatus');
+  var next = document.getElementById('restockNext');
+
+  function budapestNow() {
+    var parts = {};
+    new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Budapest', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+    }).formatToParts(new Date()).forEach(function (x) { parts[x.type] = x.value; });
+    var day = {Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6}[parts.weekday];
+    return {day: day, min: parseInt(parts.hour, 10) * 60 + parseInt(parts.minute, 10)};
+  }
+  function hhmm(h) { return h + ':00'; }
+
+  function render() {
+    var en = document.documentElement.lang === 'en';
+    var t = budapestNow();
+    var h = HOURS[t.day];
+    var open = t.min >= h[0] * 60 && t.min < h[1] * 60;
+
+    if (status) {
+      var txt;
+      if (open) {
+        txt = en ? 'Open · until ' + hhmm(h[1]) : 'Nyitva · ' + hhmm(h[1]) + '-ig';
+      } else if (t.min < h[0] * 60) {
+        txt = en ? 'Closed · opens ' + hhmm(h[0]) : 'Zárva · ma ' + hhmm(h[0]) + '-tól';
+      } else {
+        var nd = (t.day + 1) % 7;
+        txt = en ? 'Closed · tomorrow ' + hhmm(HOURS[nd][0]) : 'Zárva · holnap ' + hhmm(HOURS[nd][0]) + '-tól';
+      }
+      status.querySelector('.st-text').textContent = txt;
+      status.classList.toggle('closed', !open);
+      status.hidden = false;
+    }
+
+    var rows = document.querySelectorAll('.hours tr');
+    var idx = t.day === 0 ? 2 : (t.day === 6 ? 1 : 0);
+    rows.forEach(function (r, i) { r.classList.toggle('today', i === idx); });
+
+    if (next) {
+      var mon = HOURS[1];
+      var label;
+      if (t.day === 1 && t.min < mon[0] * 60) {
+        label = en ? 'Today from ' + hhmm(mon[0]) : 'Ma ' + hhmm(mon[0]) + '-tól';
+      } else if (t.day === 1 && t.min < mon[1] * 60) {
+        label = en ? 'It’s today, come by' : 'Ma van, gyere be';
+      } else if (t.day === 0) {
+        label = en ? 'Next: tomorrow from ' + hhmm(mon[0]) : 'Következő: holnap ' + hhmm(mon[0]) + '-tól';
+      } else {
+        var days = (8 - t.day) % 7 || 7;
+        label = en ? 'Next: Monday, in ' + days + ' days' : 'Következő: hétfő, ' + days + ' nap múlva';
+      }
+      next.textContent = label;
+      next.hidden = false;
+    }
+  }
+
+  render();
+  setInterval(render, 60000);
+  var langBtn = document.getElementById('langBtn');
+  if (langBtn) langBtn.addEventListener('click', function () { setTimeout(render, 0); });
+})();
+</script>
+</body>
+</html>

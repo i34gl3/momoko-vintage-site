@@ -1,0 +1,7 @@
+# Netlify settings for momokovintage.com
+# The website itself is in the "site" folder. There is no build step.
+[build]
+  publish = "site"
+  command = ""
+  # Only publish when the website files changed (not when raw photos are uploaded).
+  ignore = "if [ \"$CACHED_COMMIT_REF\" = \"$COMMIT_REF\" ]; then exit 1; fi; git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- site/ netlify.toml"
