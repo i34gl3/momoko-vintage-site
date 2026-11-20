@@ -7,9 +7,9 @@ Everything needed to continue work on momokovintage.com in a new chat.
 | What | Where |
 |---|---|
 | Live site | https://momokovintage.com |
-| Hosting | Moving from Netlify (team "info-x86tjkq", project "momoko-vintage") to GitHub Pages (free, public repository, publishes the `site` folder via `.github/workflows/pages.yml`) |
+| Hosting | GitHub Pages (free), public repository https://github.com/i34gl3/momoko-vintage-site; `.github/workflows/pages.yml` publishes the `site` folder |
 | Domain | Bought via Google Workspace, DNS managed at Squarespace |
-| DNS records | GitHub Pages: A `@` → 185.199.108.153 / 109.153 / 110.153 / 111.153 (optional AAAA `@` → 2606:50c0:8000::153 / 8001 / 8002 / 8003) · CNAME `www` → USERNAME.github.io. Old Netlify values: A `@` → 75.2.60.5 · CNAME `www` → momoko-vintage.netlify.app |
+| DNS records | A `@` → 185.199.108.153 / 109.153 / 110.153 / 111.153 · AAAA `@` → 2606:50c0:8000::153 / 8001 / 8002 / 8003 · CNAME `www` → i34gl3.github.io |
 | DNS, do not touch | Google MX (smtp.google.com) and the TXT records (email) |
 | Shop email | info@momokovintage.com |
 | Instagram | https://www.instagram.com/momoko_vintage/ |
@@ -19,29 +19,34 @@ Everything needed to continue work on momokovintage.com in a new chat.
 ## How the site works
 
 - One page: `site/index.html`, no build step. Hungarian by default, English button (auto-English for non-Hungarian browsers).
-- Sections (top to bottom): pinned top bar (small logo, live open/closed status, HU/EN switch), big logo, full-width photo carousel, intro (tagline, address, directions and Instagram buttons), black weekly restock band with countdown, white "Kövess minket" boxes (instagram, tiktok, facebook, google, "online platformokon is hamarosan"). Each link is one `<a class="s-link">` line; to add Etsy / Grailed / eBay, copy a line, change the link, icon and name, and put it before the "hamarosan" box (remove that box once all shops are live). Desktop fits up to 6 boxes per row., off-white "Látogass el hozzánk" (address, hours, phone, email, black-and-white map), black footer.
-- Open/closed status and restock countdown use Budapest time. Opening hours are in two places in `index.html`: the hours table and the `HOURS` list in the script.
-- Photos: full-width carousel of every photo in the pool. Phones show one photo at a time (swipe or arrows, counter "01 / 03"); desktop shows three side by side, arrows only appear when there are more than three. Auto-advances every 5 s until someone browses. The first photo changes every 3 days. Photos are shown in a 4:5 frame (cropped from the 2:3 files). The pool list sits between `/* POOL:START */` and `/* POOL:END */`.
+- Sections (top to bottom): pinned top bar (small logo on the left once you scroll past the big one; live open/closed status and hu/en switch on the right), big centred logo, photo carousel, centred intro (big tagline, sub-line, highlighted address "1088 Budapest, Krúdy utca 9, Palotanegyed" between two lines, opening hours with today highlighted, directions button), black restock band ("heti újratöltés hétfőnként" / "weekly restock", then "következő" and a live countdown nap : óra : perc : mp that ticks every second to Monday 11:00 Budapest time; on Monday while open it shows "ma van"), white "kövess minket" with a large @momoko_vintage link and the social boxes (black fill on hover), black footer (phone and email in large type, "vissza a tetejére" button, tagline, copyright). No separate "visit us" section or map; phone and email appear only in the footer.
+- Back to top: a floating black square (bottom right) appears after scrolling about one screen; a thin frame inside it fills with scroll progress. It hides when the footer is on screen, where the big "vissza a tetejére" button takes over. Clicking either eases the page back up by hand (quintic ease, up to 1.5 s, stops if the visitor scrolls), then the logo wipes in and the photos settle again. Reduced-motion visitors jump straight to the top.
+- Social boxes: each link is one `<a class="s-link">` line. To add Etsy / Grailed / eBay, copy a line, change the link, icon and name, and put it before the "hamarosan" box (remove that box once all shops are live). Desktop fits up to 6 boxes per row.
+- Open/closed status uses Budapest time: "nyitva 20:00-ig" when open, "zárva nyitás X óra múlva" when closed (minutes under one hour). Restock countdown: live days : hours : minutes : seconds to the next Monday opening (11:00), digits slide in when they change; "ma van" while open on Monday.
+- Photos: carousel of every photo in the pool. Phones show one photo with a slice of the next one peeking in (swipe; counter "1 / 3"); desktop shows three side by side, arrows only when there are more than three. Auto-advances every 5 s until someone browses. The first photo changes every 3 days. Photos are shown in a 4:5 frame (cropped from the 2:3 files). The pool list sits between `/* POOL:START */` and `/* POOL:END */`.
 - Photos that are not portrait (e.g. square product shots) get cut by the automatic 2:3 crop; prepare those by hand (the Nov 2026 shoe photo had the wall extended upward instead).
 
-## Design (new look, Nov 2026, after Zsófi's feedback; references: jilsander.com, highsnobiety.com)
+## Design (modern pass, 20 Nov 2026; earlier references: jilsander.com, highsnobiety.com, Zsófi's feedback)
 
-- Colors: off-white #F6F3EC, white #FFFFFF, black #141413. Sections alternate between them. Olive #6F7140 only for the small "open" square.
-- No rounded corners anywhere. Thin 1 px lines, square outlined buttons (black filled for the main action).
-- Font: Courier New / Courier Prime, bold (same as the original site). Small uppercase labels; social links in lower case.
-- Logo: `site/img/logo.png`, recoloured with CSS. Big black logo centered at the top of the page, photos right under it; the small logo in the pinned bar appears once you scroll past the big one.
+- Centred, symmetric layout on phone and desktop: tagline, address, restock countdown, follow block and footer are all centred.
+- One voice: everything in lower case like the logo (status, buttons, headings, footer). The tagline and address are normal sentences.
+- Colours: off-white #F6F3EC, white #FFFFFF, black #141413; grey #6E6A62 / #8B877D for secondary text; olive #6F7140 only for the "open" square.
+- No rounded corners. Few lines; no section numbers or all-caps labels.
+- Font: Courier New / Courier Prime, bold (as on the original site). Large sizes use tight negative letter spacing.
+- Loud elements: the tagline, the live restock clock and @momoko_vintage, each in very large type; everything else stays small and quiet.
+- Motion: photos settle in once on page load and again after the back-to-top trip; the logo wipes in after the trip. All switched off for reduced motion.
+- Logo: `site/img/logo.png`, recoloured with CSS.
 - No brand names on photos (preference; the Nov 2026 batch was chosen anyway).
 
 ## Hosting and automation (GitHub Pages)
 
-1. The whole folder lives in a public GitHub repository (e.g. `momoko-vintage-site`). Settings → Pages → Source: "GitHub Actions". Custom domain: `momokovintage.com`, "Enforce HTTPS" on.
+1. The whole folder lives in the public GitHub repository `i34gl3/momoko-vintage-site`. Settings → Pages → Source: "GitHub Actions". Custom domain: `momokovintage.com`, "Enforce HTTPS" on. (DNS check and HTTPS certificate confirmed working on 20 Nov 2026.)
 2. Any change in `site/` on the main branch is published by `.github/workflows/pages.yml` (about a minute).
 3. Weekly: upload new portrait photos to `incoming/` on github.com. `.github/workflows/photos.yml` runs `tools/update_photos.py` (compresses them, replaces the photo pool, removes the originals); when it finishes, `pages.yml` publishes automatically.
-4. `netlify.toml` and `site/_headers` are only used by Netlify; they can be deleted once Netlify is switched off.
+4. Status of every run: the repository's Actions tab. A run can be restarted by hand: Actions → Publish website → Run workflow.
 
 ## Open items
 
-- Swap the Google reviews button for the direct "ask for reviews" link from Google Business Profile.
 - Add Etsy / Vestiaire Collective / Grailed links when the shops are live.
 - Google Business Profile website field → https://momokovintage.com
 - Ideas not built yet: short shop video in the hero, hang-tag labels, story-style photo viewer, automatic sale banner.
