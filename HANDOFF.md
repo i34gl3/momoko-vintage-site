@@ -55,6 +55,12 @@ Everything needed to continue work on momokovintage.com in a new chat.
 - In the head: canonical URL, robots meta, Open Graph and Twitter tags, share image `img/share.jpg` (1200x630), and JSON-LD ClothingStore data with a Hungarian/English description and keywords. `site/robots.txt` and `site/sitemap.xml` exist.
 - No visible SEO text block on the page: the owner removed the footer shop description because it didn't look good. Keep the descriptive text in meta/JSON-LD only.
 
+## English page (/en/)
+- `site/en/index.html` is generated, never edited: `tools/build_en.py` copies `site/index.html`, writes every `data-en` text straight into the HTML (Hungarian kept in `data-hu`), swaps `aria-label`s, and switches title, description, canonical and Open Graph to English. The "Publish website" workflow runs it before upload; `site/en/` is in .gitignore.
+- Both pages carry hreflang links (hu, en, x-default = /). The sitemap lists both URLs with the same alternates.
+- The hu/en button still switches instantly; it also updates the address bar (/ or /en/) so shared links open in the right language. Non-Hungarian browsers landing on / switch to English as before; crawlers never auto-switch.
+- Image paths in index.html are absolute (`/img/...`) so they work from /en/ too. A new head text needs an English pair in `HEAD` in build_en.py, or the build stops with an error.
+
 ## Working on it
 - The owner approves every change: show a preview first, and push to `main` only when he says "deploy". GitHub Actions publishes automatically.
 - Owner preferences: everything lower case except the tagline and address sentences; Courier; no rounded corners; minimal, centred, black/white sections. Check phones at 360–430px for overflow before shipping.

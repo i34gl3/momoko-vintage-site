@@ -7,8 +7,11 @@
 <title>Momoko Vintage – vintage és designer second hand bolt Budapesten</title>
 <meta name="description" content="Válogatott vintage és modern klasszikusok: ruhák, cipők, táskák és kiegészítők a Palotanegyedben. Budapest, Krúdy utca 9. Minden hétfőn heti újratöltés.">
 <link rel="canonical" href="https://momokovintage.com/">
+<link rel="alternate" hreflang="hu" href="https://momokovintage.com/">
+<link rel="alternate" hreflang="en" href="https://momokovintage.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://momokovintage.com/">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<link rel="icon" type="image/png" href="img/logo.png">
+<link rel="icon" type="image/png" href="/img/logo.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://momokovintage.com/">
 <meta property="og:site_name" content="Momoko Vintage">
@@ -102,8 +105,8 @@ a { color: inherit; }
   display: block;
   aspect-ratio: 1740 / 534;
   background: currentColor;
-  -webkit-mask: url("img/logo.png") no-repeat left center / contain;
-  mask: url("img/logo.png") no-repeat left center / contain;
+  -webkit-mask: url("/img/logo.png") no-repeat left center / contain;
+  mask: url("/img/logo.png") no-repeat left center / contain;
 }
 
 /* ---------- Pinned top bar ---------- */
@@ -489,7 +492,7 @@ html.intro .brand-logo { opacity: 0; }
       var fig = document.createElement('figure');
       fig.className = 'slide';
       var img = document.createElement('img');
-      img.src = 'img/' + name;
+      img.src = '/img/' + name;
       img.width = 760; img.height = 1140;
       img.alt = 'Momoko Vintage, válogatott vintage darab ' + (i + 1);
       img.decoding = 'async';
@@ -586,9 +589,10 @@ html.intro .brand-logo { opacity: 0; }
   var btn = document.getElementById('langBtn');
   var nodes = document.querySelectorAll('[data-en]');
   var labels = document.querySelectorAll('[data-en-label]');
-  labels.forEach(function (n) { n.setAttribute('data-hu-label', n.getAttribute('aria-label')); });
-  nodes.forEach(function (n) { n.setAttribute('data-hu', n.innerHTML); });
-  var lang = 'hu';
+  /* the English page (/en/, built by tools/build_en.py) arrives with English text and the Hungarian kept in data-hu */
+  labels.forEach(function (n) { if (!n.hasAttribute('data-hu-label')) n.setAttribute('data-hu-label', n.getAttribute('aria-label')); });
+  nodes.forEach(function (n) { if (!n.hasAttribute('data-hu')) n.setAttribute('data-hu', n.innerHTML); });
+  var lang = document.documentElement.lang === 'en' ? 'en' : 'hu';
   function apply(l) {
     nodes.forEach(function (n) { n.innerHTML = l === 'en' ? n.getAttribute('data-en') : n.getAttribute('data-hu'); });
     labels.forEach(function (n) { n.setAttribute('aria-label', l === 'en' ? n.getAttribute('data-en-label') : n.getAttribute('data-hu-label')); });
@@ -596,13 +600,17 @@ html.intro .brand-logo { opacity: 0; }
     btn.textContent = l === 'en' ? 'hu' : 'en';
     btn.setAttribute('aria-label', l === 'en' ? 'Váltás magyarra' : 'Switch to English');
     document.title = l === 'en'
-      ? 'Momoko Vintage – vintage and designer second hand in Budapest'
+      ? 'Momoko Vintage – vintage and designer secondhand shop in Budapest'
       : 'Momoko Vintage – vintage és designer second hand bolt Budapesten';
+    /* keep the address bar on the matching page, so a shared link opens in the same language */
+    if (history.replaceState && /^https?:/.test(location.protocol)) {
+      history.replaceState(null, '', (l === 'en' ? '/en/' : '/') + location.hash);
+    }
   }
   btn.addEventListener('click', function () { lang = lang === 'hu' ? 'en' : 'hu'; apply(lang); });
   /* search engine crawlers report an English browser; keep them on the Hungarian page */
   var bot = /bot|crawl|spider|slurp|google|bing|yandex|duckduck|facebookexternalhit/i.test(navigator.userAgent || '');
-  if (!bot && (navigator.language || '').toLowerCase().indexOf('hu') !== 0) { lang = 'en'; apply('en'); }
+  if (!bot && lang === 'hu' && (navigator.language || '').toLowerCase().indexOf('hu') !== 0) { lang = 'en'; apply('en'); }
   document.getElementById('year').textContent = new Date().getFullYear();
   var top = document.querySelector('.top'), brand = document.getElementById('brand');
   if (top && brand && 'IntersectionObserver' in window) {
@@ -837,7 +845,7 @@ html.intro .brand-logo { opacity: 0; }
       var top = place();
       showLogoHidden();
       var img = new Image();
-      img.src = 'img/logo.png';
+      img.src = '/img/logo.png';
       (img.decode ? img.decode() : Promise.resolve()).catch(function () {}).then(function () {
         if (done) return;
         return showLogo().then(function () { return delay(120); }).then(function () { if (!done) return reveal(top); });
