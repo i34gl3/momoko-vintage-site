@@ -6,8 +6,21 @@
 <meta name="theme-color" content="#F6F3EC">
 <title>Momoko Vintage – vintage és designer second hand bolt Budapesten</title>
 <meta name="description" content="Válogatott vintage és modern klasszikusok: ruhák, cipők, táskák és kiegészítők a Palotanegyedben. Budapest, Krúdy utca 9. Minden hétfőn heti újratöltés.">
-<meta property="og:title" content="Momoko Vintage">
-<meta property="og:description" content="Curated selection of vintage and modern classics in Budapest's Palace Quarter. Krúdy utca 9.">
+<link rel="canonical" href="https://momokovintage.com/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="icon" type="image/png" href="img/logo.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://momokovintage.com/">
+<meta property="og:site_name" content="Momoko Vintage">
+<meta property="og:locale" content="hu_HU">
+<meta property="og:locale:alternate" content="en_GB">
+<meta property="og:title" content="Momoko Vintage – vintage és designer second hand bolt Budapesten">
+<meta property="og:description" content="Válogatott vintage és modern klasszikusok a Palotanegyedben. Budapest, Krúdy utca 9. Minden hétfőn heti újratöltés.">
+<meta property="og:image" content="https://momokovintage.com/img/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Momoko Vintage logó és egy vintage cipő">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
@@ -15,8 +28,15 @@
 {
   "@context": "https://schema.org",
   "@type": "ClothingStore",
+  "@id": "https://momokovintage.com/#store",
   "name": "Momoko Vintage",
-  "description": "Curated selection of vintage and modern classics. Clothing, footwear, bags and accessories in Budapest's Palace Quarter.",
+  "alternateName": ["Momoko", "Typo Showroom"],
+  "url": "https://momokovintage.com/",
+  "logo": "https://momokovintage.com/img/logo.png",
+  "image": "https://momokovintage.com/img/share.jpg",
+  "description": "Vintage és designer second hand bolt Budapesten, a Palotanegyedben: válogatott ruhák, cipők, táskák és kiegészítők, minden hétfőn friss darabokkal. Curated vintage and designer secondhand clothing, footwear, bags and accessories in Budapest's Palace Quarter.",
+  "keywords": "vintage bolt Budapest, designer second hand, használt designer ruha, vintage ruha, Palotanegyed, vintage shop Budapest",
+  "hasMap": "https://www.google.com/maps/search/?api=1&query=Momoko%20Vintage%2C%20Kr%C3%BAdy%20utca%209%2C%201088%20Budapest",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "Krúdy utca 9",
@@ -273,6 +293,10 @@ footer { padding-block: 4rem 1.75rem; text-align: center; }
   color: var(--soft); font-size: 0.875rem;
 }
 .f-bottom p { margin: 0; }
+.about {
+  max-width: 44ch; margin: 0 auto 2.25rem;
+  color: var(--soft); font-size: 0.875rem; line-height: 1.6; text-wrap: balance;
+}
 
 /* floating back-to-top: spring in, scroll progress drawn inside the square */
 .to-top {
@@ -471,7 +495,7 @@ html.intro .brand-logo { opacity: 0; }
       var img = document.createElement('img');
       img.src = 'img/' + name;
       img.width = 760; img.height = 1140;
-      img.alt = '';
+      img.alt = 'Momoko Vintage, válogatott vintage darab ' + (i + 1);
       img.decoding = 'async';
       img.draggable = false;
       if (i > 2) img.loading = 'lazy';
@@ -548,6 +572,7 @@ html.intro .brand-logo { opacity: 0; }
       <span class="sq" aria-hidden="true"><span class="arr"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span></span>
       <span data-en="back to the top">vissza a tetejére</span>
     </button>
+    <p class="about" data-en="momoko vintage is a vintage and designer secondhand shop in budapest's palace quarter (district viii). curated womenswear and menswear, jackets, shoes, bags and accessories, with fresh pieces every monday.">a momoko vintage vintage és designer second hand bolt budapesten, a palotanegyedben (viii. kerület). válogatott női és férfi ruhák, kabátok, cipők, táskák és kiegészítők, minden hétfőn friss darabokkal.</p>
     <div class="f-bottom">
       <p data-en="vintage and more. formerly typo showroom.">vintage és még sok más. korábban typo showroom.</p>
       <p>© <span id="year"></span> momoko vintage</p>
@@ -580,7 +605,9 @@ html.intro .brand-logo { opacity: 0; }
       : 'Momoko Vintage – vintage és designer second hand bolt Budapesten';
   }
   btn.addEventListener('click', function () { lang = lang === 'hu' ? 'en' : 'hu'; apply(lang); });
-  if ((navigator.language || '').toLowerCase().indexOf('hu') !== 0) { lang = 'en'; apply('en'); }
+  /* search engine crawlers report an English browser; keep them on the Hungarian page */
+  var bot = /bot|crawl|spider|slurp|google|bing|yandex|duckduck|facebookexternalhit/i.test(navigator.userAgent || '');
+  if (!bot && (navigator.language || '').toLowerCase().indexOf('hu') !== 0) { lang = 'en'; apply('en'); }
   document.getElementById('year').textContent = new Date().getFullYear();
   var top = document.querySelector('.top'), brand = document.getElementById('brand');
   if (top && brand && 'IntersectionObserver' in window) {
