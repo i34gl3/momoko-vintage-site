@@ -89,8 +89,7 @@ a { color: inherit; }
 /* ---------- Pinned top bar ---------- */
 .top {
   position: sticky; top: 0; z-index: 30;
-  background: rgba(246, 243, 236, 0.92);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  background: rgba(246, 243, 236, 0.97);
   border-bottom: 1px solid var(--line);
 }
 .top .wrap {
@@ -216,8 +215,8 @@ a { color: inherit; }
 @media (prefers-reduced-motion: no-preference) {
   .num.tick { animation: tick 0.42s cubic-bezier(.16,1,.3,1); }
   @keyframes tick {
-    from { transform: translateY(-0.28em); opacity: 0; filter: blur(3px); }
-    to { transform: none; opacity: 1; filter: none; }
+    from { transform: translate3d(0, -0.28em, 0); opacity: 0; }
+    to { transform: none; opacity: 1; }
   }
 }
 
@@ -266,7 +265,7 @@ footer { padding-block: 4rem 1.75rem; text-align: center; }
   width: 56px; height: 56px; display: grid; place-items: center;
   border: 1px solid var(--fg); transition: background 0.25s, color 0.25s, transform 0.35s cubic-bezier(.2,.8,.2,1);
 }
-.back-top .sq svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.back-top .sq { will-change: transform; }
 @media (hover: hover) { .back-top:hover .sq { background: var(--fg); color: var(--bg); transform: translateY(-4px); } }
 .f-bottom {
   display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
@@ -275,31 +274,62 @@ footer { padding-block: 4rem 1.75rem; text-align: center; }
 }
 .f-bottom p { margin: 0; }
 
-/* floating back-to-top with scroll progress drawn round its square edge */
+/* floating back-to-top: spring in, scroll progress drawn inside the square */
 .to-top {
   position: fixed; z-index: 40;
   right: calc(16px + env(safe-area-inset-right)); bottom: calc(16px + env(safe-area-inset-bottom));
   width: 52px; height: 52px; padding: 0; border: 0; cursor: pointer;
   background: var(--ink); color: var(--paper);
   display: grid; place-items: center;
-  opacity: 0; transform: translateY(16px) scale(0.9); pointer-events: none;
-  transition: opacity 0.35s, transform 0.45s cubic-bezier(.2,.8,.2,1);
+  opacity: 0; transform: translate3d(0, 24px, 0) scale(0.8); pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.55s cubic-bezier(.34,1.56,.64,1);
+  will-change: transform, opacity; -webkit-tap-highlight-color: transparent;
 }
 .to-top.show { opacity: 1; transform: none; pointer-events: auto; }
+.to-top.show:active { transform: scale(0.9); transition-duration: 0.12s; }
 .to-top .ring { position: absolute; inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); fill: none; }
 .to-top .ring rect { stroke-width: 1.5; }
 .to-top .ring .bg { stroke: rgba(246, 243, 236, 0.22); }
 .to-top .ring .bar { stroke: var(--paper); stroke-dasharray: 100; stroke-dashoffset: 100; }
-.to-top .up { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; position: relative; }
+.arr { display: grid; place-items: center; overflow: hidden; position: relative; width: 20px; height: 20px; }
+.arr svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; will-change: transform; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .to-top:hover .arr svg, .back-top:hover .arr svg { animation: arrow-loop 0.55s cubic-bezier(.76,0,.24,1); }
+  @keyframes arrow-loop {
+    0% { transform: translate3d(0, 0, 0); }
+    45% { transform: translate3d(0, -120%, 0); }
+    46% { transform: translate3d(0, 120%, 0); }
+    100% { transform: translate3d(0, 0, 0); }
+  }
+}
 
-/* arrival moment after travelling back up */
+/* logo overlay: ink curtain + gliding logo (back to top, and once per visit on load).
+   Transform-only: the curtain slides while its inner layer slides back the same amount,
+   so the light logo inside stays put and is cut exactly at the curtain edge, over a dark
+   copy outside it. Every moving part is its own GPU layer; nothing repaints. */
+.veil { position: fixed; inset: 0; z-index: 100; visibility: hidden; overflow: hidden; pointer-events: none; }
+.veil.on { visibility: visible; pointer-events: auto; }
+.veil-panel, .veil-inner { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
+.veil-panel { background: var(--ink); transform: translate3d(0, 100%, 0); }
+.veil-inner { transform: translate3d(0, -100%, 0); }
+.veil-mask { position: absolute; left: 0; top: 0; width: 0; overflow: hidden; will-change: transform; }
+.veil-logo {
+  width: 100%; pointer-events: none;
+  -webkit-mask-position: center; mask-position: center;
+  will-change: transform; backface-visibility: hidden;
+}
+.veil-light { color: var(--paper); }
+.veil-dark { position: absolute; left: 0; top: 0; width: 0; color: var(--ink); opacity: 0; }
+html.intro { overflow: hidden; }
+html.intro .veil { visibility: visible; }
+html.intro .veil { pointer-events: auto; }
+html.intro .veil-panel, html.intro .veil-inner { transform: none; }
+html.intro .brand-logo { opacity: 0; }
 @media (prefers-reduced-motion: no-preference) {
-  .brand.replay .brand-logo { animation: wipe 0.65s cubic-bezier(.7,0,.2,1) both; }
-  .gallery.replay .slide { animation: settle 0.6s cubic-bezier(.16,1,.3,1) both; }
-  .gallery.replay .slide:nth-child(1) { animation-delay: 0.18s; }
-  .gallery.replay .slide:nth-child(2) { animation-delay: 0.24s; }
-  .gallery.replay .slide:nth-child(3) { animation-delay: 0.30s; }
-  @keyframes wipe { from { clip-path: inset(0 0 100% 0); transform: translateY(18px); } to { clip-path: inset(0 0 0 0); transform: none; } }
+  .gallery.replay .slide { animation: settle 0.7s cubic-bezier(.16,1,.3,1) both; }
+  .gallery.replay .slide:nth-child(1) { animation-delay: 0.32s; }
+  .gallery.replay .slide:nth-child(2) { animation-delay: 0.38s; }
+  .gallery.replay .slide:nth-child(3) { animation-delay: 0.44s; }
 }
 
 /* ---------- Desktop ---------- */
@@ -331,8 +361,25 @@ footer { padding-block: 4rem 1.75rem; text-align: center; }
   .status, .lang { font-size: 0.78rem; }
 }
 </style>
+<script>
+/* show the logo overlay once per visit, before first paint */
+(function () {
+  try {
+    var d = document.documentElement;
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (sessionStorage.getItem('mv-intro')) return;
+    sessionStorage.setItem('mv-intro', '1');
+    d.classList.add('intro');
+    setTimeout(function () { d.classList.remove('intro'); }, 4500);
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
+<div class="veil" id="veil" aria-hidden="true">
+  <span class="logo veil-logo veil-dark" id="veilDark"></span>
+  <div class="veil-panel" id="veilPanel"><div class="veil-inner" id="veilInner"><span class="veil-mask" id="veilMask"><span class="logo veil-logo veil-light" id="veilLight"></span></span></div></div>
+</div>
 
 <header class="top at-top">
   <div class="wrap">
@@ -497,7 +544,7 @@ footer { padding-block: 4rem 1.75rem; text-align: center; }
       <a href="mailto:info@momokovintage.com">info@momokovintage.com</a>
     </p>
     <button class="back-top" type="button" data-top>
-      <span class="sq" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span>
+      <span class="sq" aria-hidden="true"><span class="arr"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span></span>
       <span data-en="back to the top">vissza a tetejére</span>
     </button>
     <div class="f-bottom">
@@ -509,7 +556,7 @@ footer { padding-block: 4rem 1.75rem; text-align: center; }
 
 <button class="to-top" id="toTop" type="button" data-top aria-label="Vissza a tetejére" data-en-label="Back to the top">
   <svg class="ring" viewBox="0 0 40 40" aria-hidden="true"><rect class="bg" x="0.75" y="0.75" width="38.5" height="38.5"/><rect class="bar" x="0.75" y="0.75" width="38.5" height="38.5" pathLength="100"/></svg>
-  <svg class="up" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+  <span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span>
 </button>
 
 <script>
@@ -630,22 +677,50 @@ footer { padding-block: 4rem 1.75rem; text-align: center; }
 })();
 </script>
 <script>
-/* Back to top: floating square that draws the scroll progress round its edge,
-   plus the big button in the footer. The trip up is eased by hand, then the
-   logo and photos replay their entrance. */
+/* Logo overlay + back to top.
+   Only transform and opacity are animated, so the browser runs everything on the
+   GPU compositor at the screen's full refresh rate (120 Hz where available), even
+   while the page is busy. Back to top: an ink curtain slides up, the logo rises in
+   the middle, the page jumps to the top underneath, the curtain lifts and the logo
+   glides into its place, light on the curtain and ink on the paper, split exactly
+   at the curtain edge. */
 (function () {
-  var btn = document.getElementById('toTop');
+  var html = document.documentElement;
+  var veil = document.getElementById('veil');
+  var panel = document.getElementById('veilPanel'), inner = document.getElementById('veilInner');
+  var mask = document.getElementById('veilMask'), light = document.getElementById('veilLight');
+  var dark = document.getElementById('veilDark');
+  var brandLogo = document.querySelector('.brand-logo');
+  var gallery = document.querySelector('.gallery');
+  var btn = document.getElementById('toTop'), bar = btn.querySelector('.bar');
   var footer = document.querySelector('footer');
-  var bar = btn.querySelector('.bar');
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var footerVisible = false, ticking = false, flying = false;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var IN = 'cubic-bezier(.76,0,.24,1)', OUT = 'cubic-bezier(.16,1,.3,1)', GLIDE = 'cubic-bezier(.65,0,.35,1)';
+  var busy = false, done = true, footerVisible = false, ticking = false, lastP = -1, H = 0;
+  var moving = [panel, inner, mask, light, dark];
 
+  function delay(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function frames(n) { return new Promise(function (r) { (function f() { if (n-- <= 0) r(); else requestAnimationFrame(f); })(); }); }
+  function ty(px) { return 'translate3d(0,' + px + ',0)'; }
+  /* start a group of animations on the same frame so they stay locked together */
+  function group(list) {
+    var anims = list.map(function (a) {
+      /* one animation per layer at a time, or the GPU path is refused */
+      a[0].getAnimations().forEach(function (x) { x.cancel(); });
+      return a[0].animate(a[1], { duration: a[2], easing: a[3], fill: 'both' });
+    });
+    var t = document.timeline && document.timeline.currentTime;
+    if (t != null) anims.forEach(function (a) { a.startTime = t; });
+    return Promise.all(anims.map(function (a) { return a.finished; }));
+  }
+
+  /* progress + visibility of the floating button */
   function update() {
     ticking = false;
-    var max = document.documentElement.scrollHeight - innerHeight;
-    var p = max > 0 ? Math.min(1, scrollY / max) : 0;
-    bar.style.strokeDashoffset = String(100 - p * 100);
-    btn.classList.toggle('show', !flying && scrollY > innerHeight * 0.8 && !footerVisible);
+    var max = html.scrollHeight - innerHeight;
+    var p = max > 0 ? Math.round(Math.min(1, scrollY / max) * 200) / 2 : 0;
+    if (p !== lastP) { lastP = p; bar.style.strokeDashoffset = String(100 - p); }
+    btn.classList.toggle('show', !busy && scrollY > innerHeight * 0.8 && !footerVisible);
   }
   addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   addEventListener('resize', update);
@@ -653,35 +728,99 @@ footer { padding-block: 4rem 1.75rem; text-align: center; }
     new IntersectionObserver(function (e) { footerVisible = e[0].isIntersecting; update(); }, { threshold: 0.15 }).observe(footer);
   }
 
-  function arrive() {
-    flying = false;
-    var brand = document.getElementById('brand'), gallery = document.querySelector('.gallery');
-    [brand, gallery].forEach(function (el) { el.classList.remove('replay'); void el.offsetWidth; el.classList.add('replay'); });
-    var main = document.getElementById('top');
-    main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: true });
+  /* size both logo copies like the big logo, centred on screen */
+  function place() {
+    var r = brandLogo.getBoundingClientRect();
+    H = r.height;
+    var top = Math.round((innerHeight - r.height) / 2);
+    [mask, dark].forEach(function (el) {
+      el.style.left = r.left + 'px'; el.style.top = top + 'px';
+      el.style.width = r.width + 'px'; el.style.height = r.height + 'px';
+    });
+    return top;
+  }
+  /* logo rises 28px while it is uncovered top-down (window and logo slide in step) */
+  function showLogo() {
+    return group([
+      [mask, [{ transform: ty((28 - H) + 'px') }, { transform: ty(0) }], 600, OUT],
+      [light, [{ transform: ty(H + 'px') }, { transform: ty(0) }], 600, OUT]
+    ]);
+  }
+  function reveal(top) {
+    var dy = brandLogo.getBoundingClientRect().top - top;
+    brandLogo.style.opacity = '0';
+    dark.style.opacity = '1';
+    if (gallery) { gallery.classList.remove('replay'); void gallery.offsetWidth; gallery.classList.add('replay'); }
+    return group([
+      [panel, [{ transform: ty(0) }, { transform: ty('-100%') }], 800, IN],
+      [inner, [{ transform: ty(0) }, { transform: ty('100%') }], 800, IN],
+      [mask, [{ transform: ty(0) }, { transform: ty(dy + 'px') }], 900, GLIDE],
+      [dark, [{ transform: ty(0) }, { transform: ty(dy + 'px') }], 900, GLIDE]
+    ]);
+  }
+  function finish() {
+    if (done) return;
+    done = true;
+    brandLogo.style.opacity = '';
+    html.classList.remove('intro');
+    veil.classList.remove('on');
+    dark.style.opacity = '';
+    moving.forEach(function (el) { el.getAnimations().forEach(function (a) { a.cancel(); }); el.style.transform = ''; });
+    busy = false;
     update();
   }
-  function ease(t) { return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2; }
+  function jumpTop() {
+    try { scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch (e) { scrollTo(0, 0); }
+    if (scrollY !== 0) { html.style.scrollBehavior = 'auto'; scrollTo(0, 0); html.style.scrollBehavior = ''; }
+  }
+  function focusMain() {
+    var main = document.getElementById('top');
+    main.setAttribute('tabindex', '-1');
+    main.focus({ preventScroll: true });
+  }
 
   function goTop() {
-    if (reduce) { scrollTo(0, 0); arrive(); return; }
-    var root = document.documentElement, start = scrollY, t0 = null;
-    var dur = Math.min(1100, 520 + start * 0.15);
-    var stopped = false;
-    function cancel() { stopped = true; }
-    ['wheel', 'touchstart', 'keydown'].forEach(function (t) { addEventListener(t, cancel, { passive: true, once: true }); });
-    root.style.scrollBehavior = 'auto';
-    flying = true; update();
-    requestAnimationFrame(function step(ts) {
-      if (stopped) { root.style.scrollBehavior = ''; flying = false; update(); return; }
-      if (t0 === null) t0 = ts;
-      var k = Math.min(1, (ts - t0) / dur);
-      scrollTo(0, Math.round(start * (1 - ease(k))));
-      if (k < 1) requestAnimationFrame(step);
-      else { root.style.scrollBehavior = ''; arrive(); }
-    });
+    if (busy) return;
+    if (reduce || !veil.animate) { jumpTop(); focusMain(); return; }
+    busy = true; done = false; update();
+    var top = place();
+    showLogoHidden();
+    veil.classList.add('on');
+    Promise.all([
+      group([
+        [panel, [{ transform: ty('100%') }, { transform: ty(0) }], 480, IN],
+        [inner, [{ transform: ty('-100%') }, { transform: ty(0) }], 480, IN]
+      ]).then(jumpTop),
+      delay(200).then(showLogo)
+    ]).then(function () { return frames(2); })
+      .then(function () { return reveal(top); })
+      .then(finish, finish)
+      .then(focusMain);
+  }
+  /* park the light logo below its window until it rises */
+  function showLogoHidden() {
+    mask.style.transform = ty((28 - H) + 'px');
+    light.style.transform = ty(H + 'px');
   }
   document.querySelectorAll('[data-top]').forEach(function (b) { b.addEventListener('click', goTop); });
+
+  /* once-per-visit intro: logo rises on ink, then glides into place */
+  if (html.classList.contains('intro')) {
+    if (!veil.animate || scrollY > 0) { done = false; finish(); }
+    else {
+      busy = true; done = false;
+      veil.classList.add('on');
+      veil.addEventListener('click', finish, { once: true });
+      var top = place();
+      showLogoHidden();
+      var img = new Image();
+      img.src = 'img/logo.png';
+      (img.decode ? img.decode() : Promise.resolve()).catch(function () {}).then(function () {
+        if (done) return;
+        return showLogo().then(function () { return delay(120); }).then(function () { if (!done) return reveal(top); });
+      }).then(finish, finish);
+    }
+  }
   update();
 })();
 </script>

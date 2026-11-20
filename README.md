@@ -23,7 +23,7 @@ A legegyszerűbb, ha a változtatást Claude-dal készítteted el, és csak a ka
 - A felső sávban a nyitvatartás jelzése budapesti idő szerint: „nyitva 20:00-ig”, illetve „zárva nyitás 11 óra múlva”.
 - A hétfői újratöltés élő, másodpercre pontos visszaszámlálója (nap : óra : perc : mp, hétfő 11:00-ig), hétfőn nyitvatartás alatt „ma van”.
 - A fotók: lapozhatók (telefonon húzással, a következő kép széle belóg; asztali gépen hármasával látszanak, nyilakkal), és 3 naponta más fotó kerül előre.
-- Görgetéskor jobb lent megjelenik egy fekete négyzet (a kerete mutatja, hol tartasz az oldalon), az oldal alján pedig egy „vissza a tetejére” gomb. Mindkettő finoman visszagörget a tetejére.
+- Görgetéskor jobb lent megjelenik egy fekete négyzet (a kerete mutatja, hol tartasz az oldalon), az oldal alján pedig egy „vissza a tetejére” gomb. Bármelyikre koppintva fekete függöny húzódik fel, közepén a momoko logóval; mögötte az oldal a tetejére ugrik, a függöny felemelkedik, a logó pedig a helyére siklik. Látogatásonként egyszer, az oldal megnyitásakor is lefut (koppintásra átugorható).
 - A nyelv: magyar alapból, a nem magyar böngészőknek angol. Az **en / hu** gombbal lehet váltani.
 
 ## Mappák és fájlok
