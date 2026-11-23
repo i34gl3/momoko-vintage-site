@@ -62,7 +62,7 @@ Everything needed to continue work on momokovintage.com in a new chat.
 - Image paths in index.html are absolute (`/img/...`) so they work from /en/ too. A new head text needs an English pair in `HEAD` in build_en.py, or the build stops with an error.
 
 ## Featured poster (sale, event)
-- `FEATURE` in index.html (just below POOL:END) puts one extra image in the middle slot of the gallery until `until` (UTC midnight), then hides it by itself. It sits outside POOL, so photo uploads don't touch it, and its file name (`sale-…webp`, not `p-…`) keeps the photo script from deleting it.
+- `FEATURE` in index.html (just below POOL:END) puts one extra image first on phones and in the middle on desktop until `until` (UTC midnight), then hides it by itself. It sits outside POOL, so photo uploads don't touch it, and its file name (`sale-…webp`, not `p-…`) keeps the photo script from deleting it.
 - To show a new poster: save it 1080×1350 (4:5) as WebP in site/img, change `name`, `until` and both `alt` texts. Remove the old file when done.
 
 ## Working on it

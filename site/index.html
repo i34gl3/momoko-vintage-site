@@ -477,7 +477,7 @@ html.intro .brand-logo { opacity: 0; }
     ];
     var START = Date.UTC(2026, 10, 18);
     /* POOL:END */
-    /* A poster shown in the middle slot until the given day (sale, event).
+    /* A poster shown first on phones and in the middle on desktop until the given day (sale, event).
        Kept outside POOL so new photo uploads don't remove it; after `until` it hides itself. */
     var FEATURE = {
       name: 'sale-20261127.webp',
@@ -496,7 +496,9 @@ html.intro .brand-logo { opacity: 0; }
     var first = Math.max(0, Math.floor((today - START) / 86400000 / 3)) % n;
     var order = POOL.slice(first).concat(POOL.slice(0, first));
     if (FEATURE && today < FEATURE.until) {
-      order.splice(Math.min(1, order.length), 0, FEATURE.name);
+      /* phones (one photo at a time): first slide; desktop (three in a row): the middle one */
+      var wide = window.matchMedia && window.matchMedia('(min-width: 760px)').matches;
+      order.splice(wide ? Math.min(1, order.length) : 0, 0, FEATURE.name);
       n = order.length;
     }
 
