@@ -2,7 +2,7 @@
 
 Runs automatically on GitHub (see .github/workflows/photos.yml) whenever
 photos are uploaded to the "incoming" folder:
-  1. each photo is rotated upright, cropped to 2:3 portrait and resized,
+  1. each photo is rotated upright, cropped to 4:5 portrait (the gallery frame) and resized,
   2. saved as a small WebP file in site/img,
   3. the photo list in site/index.html is replaced with the new batch,
   4. the original uploads are removed.
@@ -25,21 +25,21 @@ INCOMING = ROOT / "incoming"
 IMG = ROOT / "site" / "img"
 HTML = ROOT / "site" / "index.html"
 EXTS = {".jpg", ".jpeg", ".png", ".heic", ".heif", ".webp"}
-WIDTH = 760
+WIDTH = 1080
 
 
 def prepare(path: pathlib.Path) -> Image.Image:
     im = ImageOps.exif_transpose(Image.open(path)).convert("RGB")
     w, h = im.size
-    target_w = round(h * 2 / 3)
-    if target_w < w:  # wider than 2:3: crop the sides
+    target_w = round(h * 4 / 5)
+    if target_w < w:  # wider than 4:5: crop the sides
         left = (w - target_w) // 2
         im = im.crop((left, 0, left + target_w, h))
-    else:  # taller than 2:3: crop top and bottom
-        target_h = round(w * 3 / 2)
+    else:  # taller than 4:5: crop top and bottom
+        target_h = round(w * 5 / 4)
         top = (h - target_h) // 2
         im = im.crop((0, top, w, top + target_h))
-    return im.resize((WIDTH, round(WIDTH * 3 / 2)), Image.LANCZOS)
+    return im.resize((WIDTH, round(WIDTH * 5 / 4)), Image.LANCZOS)
 
 
 def main() -> int:
@@ -54,7 +54,7 @@ def main() -> int:
     new_names = []
     for i, f in enumerate(files, 1):
         name = f"p-{stamp}-{i:02d}.webp"
-        prepare(f).save(IMG / name, "WEBP", quality=74, method=6)
+        prepare(f).save(IMG / name, "WEBP", quality=72, method=6)
         new_names.append(name)
         print(f"{f.name} -> {name}")
 

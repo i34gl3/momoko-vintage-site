@@ -471,11 +471,12 @@ html.intro .brand-logo { opacity: 0; }
   (function () {
     /* POOL:START */
     var POOL = [
-    'p-202611181700-01.webp',
-    'p-202611181700-02.webp',
-    'p-202611181700-03.webp'
+    'p-202611232012-01.webp',
+    'p-202611232012-02.webp',
+    'p-202611232012-03.webp',
+    'p-202611232012-04.webp'
     ];
-    var START = Date.UTC(2026, 10, 18);
+    var START = Date.UTC(2026, 10, 23);
     /* POOL:END */
     /* A poster shown first on phones and in the middle on desktop until the given day (sale, event).
        Kept outside POOL so new photo uploads don't remove it; after `until` it hides itself. */
@@ -507,7 +508,7 @@ html.intro .brand-logo { opacity: 0; }
       fig.className = 'slide';
       var img = document.createElement('img');
       img.src = '/img/' + name;
-      img.width = 760; img.height = 1140;
+      img.width = 1080; img.height = 1350;
       img.alt = 'Momoko Vintage, válogatott vintage darab ' + (i + 1);
       if (FEATURE && name === FEATURE.name) img.alt = FEATURE.alt[document.documentElement.lang === 'en' ? 'en' : 'hu'];
       img.decoding = 'async';
