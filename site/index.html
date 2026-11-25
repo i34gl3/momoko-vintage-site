@@ -24,9 +24,6 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Momoko Vintage logó és egy vintage cipő">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -58,6 +55,12 @@
 }
 </script>
 <style>
+/* Courier Prime, self-hosted: only downloaded on devices without Courier New (mostly Android) */
+@font-face { font-family: "Courier Prime"; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/courier-prime-latin-400-normal.woff2) format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Courier Prime"; font-style: normal; font-weight: 400; font-display: swap; src: url(/fonts/courier-prime-latin-ext-400-normal.woff2) format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "Courier Prime"; font-style: normal; font-weight: 700; font-display: swap; src: url(/fonts/courier-prime-latin-700-normal.woff2) format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Courier Prime"; font-style: normal; font-weight: 700; font-display: swap; src: url(/fonts/courier-prime-latin-ext-700-normal.woff2) format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+
 /* Momoko Vintage, Nov 2026.
    One voice: lower case like the logo, bold courier, off-white / white / black,
    square corners. The one loud element is the restock countdown. */
@@ -581,7 +584,7 @@ html.intro .brand-logo { opacity: 0; }
   <div class="wrap">
     <p class="contact">
       <a href="tel:+36306170265">+36 30 617 0265</a>
-      <a href="mailto:info@momokovintage.com">info@momokovintage.com</a>
+      <a class="js-mail" data-u="info" data-d="momokovintage.com" href="#">info [at] momokovintage.com</a>
     </p>
     <button class="back-top" type="button" data-top>
       <span class="sq" aria-hidden="true"><span class="arr"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span></span>
@@ -628,6 +631,11 @@ html.intro .brand-logo { opacity: 0; }
   var bot = /bot|crawl|spider|slurp|google|bing|yandex|duckduck|facebookexternalhit/i.test(navigator.userAgent || '');
   if (!bot && lang === 'hu' && (navigator.language || '').toLowerCase().indexOf('hu') !== 0) { lang = 'en'; apply('en'); }
   document.getElementById('year').textContent = new Date().getFullYear();
+  /* email link is assembled here so address-harvesting bots don't find it in the page source */
+  document.querySelectorAll('.js-mail').forEach(function (a) {
+    var m = a.getAttribute('data-u') + '@' + a.getAttribute('data-d');
+    a.href = 'mailto:' + m; a.textContent = m;
+  });
   var top = document.querySelector('.top'), brand = document.getElementById('brand');
   if (top && brand && 'IntersectionObserver' in window) {
     new IntersectionObserver(function (e) {
