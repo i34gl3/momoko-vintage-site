@@ -160,6 +160,7 @@ a { color: inherit; }
   aspect-ratio: 4 / 5; background: #E8E3D8; overflow: hidden;
 }
 .slide img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
+.slide video { display: block; width: 100%; height: 100%; object-fit: cover; }
 .g-bar {
   display: flex; align-items: center; justify-content: space-between;
   padding-top: 0.85rem; min-height: 40px;
@@ -485,6 +486,7 @@ html.intro .brand-logo { opacity: 0; }
        Kept outside POOL so new photo uploads don't remove it; after `until` it hides itself. */
     var FEATURE = {
       name: 'sale-20261127-mono.webp',
+      video: 'sale-20261127-motion.mp4',  /* optional: plays once when the poster comes into view; the still above is its poster and the reduced-motion fallback */
       until: Date.UTC(2026, 10, 29),
       alt: { hu: 'Momoko Vintage: 30% kedvezmény mindenre, péntek–szombat, november 27–28.',
              en: 'Momoko Vintage: 30% off everything, Friday and Saturday, 27–28 November.' }
@@ -506,9 +508,36 @@ html.intro .brand-logo { opacity: 0; }
       n = order.length;
     }
 
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     order.forEach(function (name, i) {
       var fig = document.createElement('figure');
       fig.className = 'slide';
+      if (FEATURE && name === FEATURE.name && FEATURE.video && !still) {
+        var vid = document.createElement('video');
+        vid.muted = true; vid.setAttribute('muted', '');
+        vid.playsInline = true; vid.setAttribute('playsinline', '');
+        vid.preload = 'auto';
+        vid.poster = '/img/' + name;
+        vid.src = '/img/' + FEATURE.video;
+        vid.width = 1080; vid.height = 1350;
+        vid.setAttribute('role', 'img');
+        vid.setAttribute('aria-label', FEATURE.alt[document.documentElement.lang === 'en' ? 'en' : 'hu']);
+        fig.appendChild(vid);
+        track.appendChild(fig);
+        /* play from the start each time the poster comes back into view; then it rests on the last frame */
+        if ('IntersectionObserver' in window) {
+          var ready = true;
+          new IntersectionObserver(function (es) {
+            es.forEach(function (e) {
+              if (e.intersectionRatio >= 0.6 && ready) {
+                ready = false; vid.currentTime = 0;
+                var p = vid.play(); if (p && p.catch) p.catch(function () {});
+              } else if (e.intersectionRatio < 0.1) ready = true;
+            });
+          }, { threshold: [0, 0.1, 0.6] }).observe(vid);
+        } else { vid.autoplay = true; }
+        return;
+      }
       var img = document.createElement('img');
       img.src = '/img/' + name;
       img.width = 1080; img.height = 1350;
