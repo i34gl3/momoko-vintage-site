@@ -509,6 +509,7 @@ html.intro .brand-logo { opacity: 0; }
     }
 
     var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var featVid = null, holdUntil = 0;
     order.forEach(function (name, i) {
       var fig = document.createElement('figure');
       fig.className = 'slide';
@@ -524,17 +525,25 @@ html.intro .brand-logo { opacity: 0; }
         vid.setAttribute('aria-label', FEATURE.alt[document.documentElement.lang === 'en' ? 'en' : 'hu']);
         fig.appendChild(vid);
         track.appendChild(fig);
-        /* play from the start each time the poster comes back into view; then it rests on the last frame */
+        /* play from the start each time the poster comes back into view (never behind the
+           opening logo curtain); then it rests on the last frame */
+        featVid = vid;
+        vid.addEventListener('ended', function () { holdUntil = Date.now() + 2500; });
         if ('IntersectionObserver' in window) {
-          var ready = true;
+          var ready = true, seen = 0, root = document.documentElement;
+          var maybePlay = function () {
+            if (!ready || seen < 0.6 || root.classList.contains('intro')) return;
+            ready = false; vid.currentTime = 0;
+            var p = vid.play(); if (p && p.catch) p.catch(function () { ready = true; });
+          };
           new IntersectionObserver(function (es) {
             es.forEach(function (e) {
-              if (e.intersectionRatio >= 0.6 && ready) {
-                ready = false; vid.currentTime = 0;
-                var p = vid.play(); if (p && p.catch) p.catch(function () {});
-              } else if (e.intersectionRatio < 0.1) ready = true;
+              seen = e.intersectionRatio;
+              if (seen < 0.1) { ready = true; if (!vid.paused) vid.pause(); }
+              maybePlay();
             });
           }, { threshold: [0, 0.1, 0.6] }).observe(vid);
+          new MutationObserver(maybePlay).observe(root, { attributes: true, attributeFilter: ['class'] });
         } else { vid.autoplay = true; }
         return;
       }
@@ -589,6 +598,8 @@ html.intro .brand-logo { opacity: 0; }
     function stop() { clearInterval(timer); timer = null; }
     ['pointerdown', 'touchstart', 'wheel'].forEach(function (t) { track.addEventListener(t, stop, { passive: true }); });
     if (!reduce) timer = setInterval(function () {
+      /* wait while the poster video plays, and let its last frame sit for a moment */
+      if (featVid && ((!featVid.paused && !featVid.ended) || Date.now() < holdUntil)) return;
       if (!document.hidden && track.scrollWidth > track.clientWidth + 4) go(index() + 1);
     }, 5000);
   })();
