@@ -501,9 +501,10 @@ html.intro .brand-logo { opacity: 0; }
     var today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
     var first = Math.max(0, Math.floor((today - START) / 86400000 / 3)) % n;
     var order = POOL.slice(first).concat(POOL.slice(0, first));
+    var wide = false;
     if (FEATURE && today < FEATURE.until) {
       /* phones (one photo at a time): first slide; desktop (three in a row): the middle one */
-      var wide = window.matchMedia && window.matchMedia('(min-width: 760px)').matches;
+      wide = window.matchMedia && window.matchMedia('(min-width: 760px)').matches;
       order.splice(wide ? Math.min(1, order.length) : 0, 0, FEATURE.name);
       n = order.length;
     }
@@ -598,7 +599,9 @@ html.intro .brand-logo { opacity: 0; }
     function stop() { clearInterval(timer); timer = null; }
     ['pointerdown', 'touchstart', 'wheel'].forEach(function (t) { track.addEventListener(t, stop, { passive: true }); });
     if (!reduce) timer = setInterval(function () {
-      /* wait while the poster video plays, and let its last frame sit for a moment */
+      /* desktop: the poster video stays in the middle, so no auto-advance while it is featured */
+      if (featVid && wide) return;
+      /* phones: wait while the poster video plays, and let its last frame sit for a moment */
       if (featVid && ((!featVid.paused && !featVid.ended) || Date.now() < holdUntil)) return;
       if (!document.hidden && track.scrollWidth > track.clientWidth + 4) go(index() + 1);
     }, 5000);
