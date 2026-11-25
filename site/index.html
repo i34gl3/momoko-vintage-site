@@ -510,7 +510,7 @@ html.intro .brand-logo { opacity: 0; }
     }
 
     var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var featVid = null, holdUntil = 0;
+    var featVid = null, holdUntil = 0, playedOnce = false;
     order.forEach(function (name, i) {
       var fig = document.createElement('figure');
       fig.className = 'slide';
@@ -529,23 +529,51 @@ html.intro .brand-logo { opacity: 0; }
         /* play from the start each time the poster comes back into view (never behind the
            opening logo curtain); then it rests on the last frame */
         featVid = vid;
-        vid.addEventListener('ended', function () { holdUntil = Date.now() + 2500; });
-        if ('IntersectionObserver' in window) {
-          var ready = true, seen = 0, root = document.documentElement;
-          var maybePlay = function () {
-            if (!ready || seen < 0.6 || root.classList.contains('intro')) return;
-            ready = false; vid.currentTime = 0;
-            var p = vid.play(); if (p && p.catch) p.catch(function () { ready = true; });
-          };
-          new IntersectionObserver(function (es) {
-            es.forEach(function (e) {
-              seen = e.intersectionRatio;
-              if (seen < 0.1) { ready = true; if (!vid.paused) vid.pause(); }
-              maybePlay();
-            });
-          }, { threshold: [0, 0.1, 0.6] }).observe(vid);
+        vid.addEventListener('ended', function () { playedOnce = true; holdUntil = Date.now() + 2500; });
+        /* Robust start: decide from the element's real position every time (not from a stored
+           threshold), retry after a blocked autoplay (iPhone Low Power Mode, in-app browsers) on the
+           first touch, rewind safely, and restart when the page comes back from the back/forward cache. */
+        (function () {
+          var root = document.documentElement, ready = true;
+          function shown() {
+            var r = vid.getBoundingClientRect();
+            if (!r.width || !r.height) return 0;
+            var w = Math.min(r.right, innerWidth) - Math.max(r.left, 0);
+            var h = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0);
+            return w > 0 && h > 0 ? (w * h) / (r.width * r.height) : 0;
+          }
+          function rewind() { try { if (vid.currentTime > 0) vid.currentTime = 0; } catch (e) {} }
+          function maybePlay() {
+            if (document.hidden || root.classList.contains('intro')) return;
+            var v = shown();
+            if (v < 0.1) { if (!vid.paused) vid.pause(); ready = true; return; }
+            if (!ready || v < 0.5 || (!vid.paused && !vid.ended)) return;
+            ready = false; rewind();
+            var p = vid.play();
+            if (p && p.catch) p.catch(function () { ready = true; });
+          }
+          if ('IntersectionObserver' in window) {
+            new IntersectionObserver(maybePlay, { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] }).observe(vid);
+          }
           new MutationObserver(maybePlay).observe(root, { attributes: true, attributeFilter: ['class'] });
-        } else { vid.autoplay = true; }
+          ['loadedmetadata', 'canplay'].forEach(function (t) { vid.addEventListener(t, maybePlay); });
+          var raf2;
+          function soon() { cancelAnimationFrame(raf2); raf2 = requestAnimationFrame(maybePlay); }
+          track.addEventListener('scroll', soon, { passive: true });
+          addEventListener('scroll', soon, { passive: true });
+          addEventListener('resize', soon);
+          document.addEventListener('visibilitychange', maybePlay);
+          /* a touch counts as permission to play where autoplay was refused */
+          ['touchend', 'pointerup', 'keydown'].forEach(function (t) {
+            addEventListener(t, function () { if (vid.paused && !vid.ended) { ready = true; maybePlay(); } }, { passive: true });
+          });
+          addEventListener('pageshow', function (e) { if (e.persisted) { ready = true; rewind(); maybePlay(); } });
+          /* safety net for the first 20 s: if it should be playing but isn't, try again */
+          var tries = 0, watch = setInterval(function () {
+            if (++tries > 20 || vid.ended || (!vid.paused && vid.currentTime > 0)) { if (tries > 20 || vid.ended) clearInterval(watch); return; }
+            if (vid.paused && vid.currentTime === 0) { ready = true; maybePlay(); }
+          }, 1000);
+        })();
         return;
       }
       var img = document.createElement('img');
@@ -601,8 +629,9 @@ html.intro .brand-logo { opacity: 0; }
     if (!reduce) timer = setInterval(function () {
       /* desktop: the poster video stays in the middle, so no auto-advance while it is featured */
       if (featVid && wide) return;
-      /* phones: wait while the poster video plays, and let its last frame sit for a moment */
-      if (featVid && ((!featVid.paused && !featVid.ended) || Date.now() < holdUntil)) return;
+      /* phones: stay on the poster until its motion has played once (also when autoplay was
+         blocked and is waiting for a tap), then let the last frame sit for a moment */
+      if (featVid && (!playedOnce || (!featVid.paused && !featVid.ended) || Date.now() < holdUntil)) return;
       if (!document.hidden && track.scrollWidth > track.clientWidth + 4) go(index() + 1);
     }, 5000);
   })();
