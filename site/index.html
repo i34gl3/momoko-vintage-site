@@ -160,7 +160,9 @@ a { color: inherit; }
   aspect-ratio: 4 / 5; background: #E8E3D8; overflow: hidden;
 }
 .slide img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
-.slide video { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* the poster video fills its 4:5 frame exactly in every browser (Safari sizes a video 2:1 until it loads) */
+.slide.is-video { position: relative; background: #E8E3D8 center / cover no-repeat; }
+.slide video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center; background: transparent; }
 .g-bar {
   display: flex; align-items: center; justify-content: space-between;
   padding-top: 0.85rem; min-height: 40px;
@@ -367,6 +369,9 @@ html.intro .brand-logo { opacity: 0; }
   .brand-logo { width: min(100%, 30vh * 3.26); }
   .track { --gap: 6px; padding-inline: 0; scroll-padding-inline: 0; }
   .slide { flex-basis: calc((100% - 2 * var(--gap)) / 3); }
+  /* the row is sized so three 4:5 tiles fit under the logo on the first screen (set by the carousel script) */
+  .track { max-width: var(--row-w, none); margin-inline: auto; }
+  .g-bar { width: min(var(--row-w, 1280px), 100%); padding-inline: 0; }
   .g-btns { display: flex; }
   .intro { padding-block: 6rem 7rem; }
   .restock { padding-block: 4rem 4.25rem; }
@@ -524,6 +529,8 @@ html.intro .brand-logo { opacity: 0; }
         vid.width = 1080; vid.height = 1350;
         vid.setAttribute('role', 'img');
         vid.setAttribute('aria-label', FEATURE.alt[document.documentElement.lang === 'en' ? 'en' : 'hu']);
+        fig.classList.add('is-video');
+        fig.style.backgroundImage = 'url(/img/' + name + ')';
         fig.appendChild(vid);
         track.appendChild(fig);
         /* play from the start each time the poster comes back into view (never behind the
@@ -587,6 +594,30 @@ html.intro .brand-logo { opacity: 0; }
       fig.appendChild(img);
       track.appendChild(fig);
     });
+
+    /* desktop: shrink the row (never stretch it) so the whole 4:5 tiles, poster included,
+       are visible on the first screen below the logo */
+    var desk = window.matchMedia ? window.matchMedia('(min-width: 760px)') : null;
+    function fitRow() {
+      var gallery = track.parentElement;
+      if (!desk || !desk.matches) { gallery.style.removeProperty('--row-w'); return; }
+      gallery.style.removeProperty('--row-w');
+      /* distance from the top of the page (measured from the top bar, so the intro's
+         temporary 96px shift doesn't count) */
+      var head = document.querySelector('.top');
+      var top = track.getBoundingClientRect().top - (head ? head.getBoundingClientRect().top : -(window.scrollY || 0));
+      var avail = innerHeight - top - 16;
+      var g = parseFloat(getComputedStyle(track).columnGap) || 0;
+      var w = Math.max(3 * 220 + 2 * g, Math.floor(avail * 0.8) * 3 + 2 * g);
+      if (w < track.clientWidth - 1) gallery.style.setProperty('--row-w', w + 'px');
+    }
+    fitRow();
+    window.addEventListener('resize', function () { fitRow(); update(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitRow(); update(); });
+    /* the opening logo curtain shifts the layout while it plays: measure again once it is gone */
+    new MutationObserver(function () {
+      if (!document.documentElement.classList.contains('intro')) { fitRow(); update(); }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
     function gap() { return parseFloat(getComputedStyle(track).columnGap) || 0; }
     function step() { return track.firstElementChild.getBoundingClientRect().width + gap(); }
