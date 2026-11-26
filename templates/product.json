@@ -275,7 +275,6 @@
             "mv_box": {
               "type": "momoko-store-box",
               "settings": {
-                "address": "1088 budapest, krúdy utca 9 · minden nap nyitva",
                 "email": "info@momokovintage.com",
                 "instagram": "https://www.instagram.com/momoko_vintage/",
                 "padding-block-start": 8,

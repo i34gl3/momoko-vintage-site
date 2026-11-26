@@ -1,5 +1,5 @@
 {%- doc -%}
-  Momoko: "see it in the store" + "ask for more photos" box on the product page.
+  Momoko: "questions about this piece?" box with ask-for-more-photos and Instagram links.
 {%- enddoc -%}
 {%- liquid
   assign s = block.settings
@@ -13,9 +13,7 @@
   endcapture
 -%}
 <div class="mv-box spacing-style" style="{% render 'spacing-style', settings: s %}" {{ block.shopify_attributes }}>
-  <p class="mv-box-t">{{ 'momoko.store_box.see_it' | t }}</p>
-  <p class="mv-soft">{{ s.address }}</p>
-  <p class="mv-box-t" style="margin-top:0.75rem">{{ 'momoko.store_box.questions' | t }}</p>
+  <p class="mv-box-t">{{ 'momoko.store_box.questions' | t }}</p>
   <p><a href="mailto:{{ s.email }}?subject={{ subject | strip | url_encode }}&body={{ body | strip | url_encode }}">{{ 'momoko.store_box.more_photos' | t }}</a>
   {%- if s.instagram != blank %} · <a href="{{ s.instagram }}" target="_blank" rel="noopener">{{ 'momoko.store_box.instagram' | t }}</a>{% endif -%}</p>
 </div>
@@ -25,7 +23,6 @@
   "name": "Momoko: store box",
   "tag": null,
   "settings": [
-    { "type": "text", "id": "address", "label": "Store line", "default": "1088 budapest, krúdy utca 9 · minden nap nyitva" },
     { "type": "text", "id": "email", "label": "Email", "default": "info@momokovintage.com" },
     { "type": "text", "id": "instagram", "label": "Instagram", "default": "https://www.instagram.com/momoko_vintage/" },
     { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 16 },

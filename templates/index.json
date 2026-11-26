@@ -555,8 +555,8 @@
     "momoko_store": {
       "type": "momoko-store",
       "settings": {
-        "title": "próbáld fel budapesten",
-        "subtitle": "minden online darab a boltban is megnézhető, amíg el nem kel.",
+        "title": "gyere be a boltba",
+        "subtitle": "a boltban más darabok várnak. hétfőnként ott is újratöltünk.",
         "address": "1088 Budapest, Krúdy utca 9, Palotanegyed",
         "days_1": "hétfő–péntek",
         "hours_1": "11:00–20:00",
