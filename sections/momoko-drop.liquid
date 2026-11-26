@@ -1,0 +1,78 @@
+{%- comment -%}
+  Momoko: live countdown to the weekly drop (Monday 11:00 Budapest time by default),
+  "today" while the drop day is on. Same clock as momokovintage.com.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+-%}
+<section class="mv-drop" style="background: {{ s.background }}; color: {{ s.text }}; padding: {{ s.padding }}px 1rem;" data-day="{{ s.day }}" data-hour="{{ s.hour }}" data-close="{{ s.close_hour }}" id="mv-drop-{{ section.id }}">
+  {%- if s.title != blank -%}<h2 class="mv-drop__title">{{ s.title }}</h2>{%- endif -%}
+  <div class="mv-drop__count" hidden>
+    <p class="mv-drop__label">{{ 'momoko.drop.next' | t }}</p>
+    <div class="mv-drop__clock" role="timer">
+      <span class="mv-drop__u"><b data-u="d">0</b><i>{{ 'momoko.drop.days' | t }}</i></span><span class="mv-drop__sep" aria-hidden="true">:</span>
+      <span class="mv-drop__u"><b data-u="h">00</b><i>{{ 'momoko.drop.hours' | t }}</i></span><span class="mv-drop__sep" aria-hidden="true">:</span>
+      <span class="mv-drop__u"><b data-u="m">00</b><i>{{ 'momoko.drop.min' | t }}</i></span><span class="mv-drop__sep" aria-hidden="true">:</span>
+      <span class="mv-drop__u"><b data-u="s">00</b><i>{{ 'momoko.drop.sec' | t }}</i></span>
+    </div>
+  </div>
+  <p class="mv-drop__today" hidden>{{ 'momoko.drop.today' | t }}</p>
+  {%- if s.link != blank -%}<p style="margin-top:1.5rem"><a class="button" href="{{ s.link }}">{{ s.link_label }}</a></p>{%- endif -%}
+</section>
+<script>
+  (function () {
+    var root = document.getElementById('mv-drop-{{ section.id }}');
+    if (!root) return;
+    var DAY = +root.dataset.day, H = +root.dataset.hour, CLOSE = +root.dataset.close;
+    var count = root.querySelector('.mv-drop__count'), today = root.querySelector('.mv-drop__today');
+    var nodes = {}; root.querySelectorAll('[data-u]').forEach(function (n) { nodes[n.dataset.u] = n; });
+    var map = {Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6};
+    function bp() {
+      var p = {};
+      new Intl.DateTimeFormat('en-GB', {timeZone: 'Europe/Budapest', weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'})
+        .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+      return {d: map[p.weekday], s: (+p.hour) * 3600 + (+p.minute) * 60 + (+p.second)};
+    }
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function set(u, v) {
+      var n = nodes[u]; if (!n || n.textContent === v) return;
+      n.textContent = v;
+      if (!reduce) { n.classList.remove('mv-tick'); void n.offsetWidth; n.classList.add('mv-tick'); }
+    }
+    function tick() {
+      var t = bp();
+      var start = H * 3600, end = CLOSE * 3600;
+      if (t.d === DAY && t.s >= start && t.s < end) { count.hidden = true; today.hidden = false; return; }
+      var days = (DAY - t.d + 7) % 7;
+      var left = days * 86400 + start - t.s;
+      if (left <= 0) left += 7 * 86400;
+      count.hidden = false; today.hidden = true;
+      set('d', String(Math.floor(left / 86400)));
+      set('h', pad(Math.floor(left % 86400 / 3600)));
+      set('m', pad(Math.floor(left % 3600 / 60)));
+      set('s', pad(left % 60));
+    }
+    tick(); setInterval(tick, 1000);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Momoko: weekly drop",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "heti újratöltés hétfőnként" },
+    { "type": "select", "id": "day", "label": "Drop day", "default": "1", "options": [
+      { "value": "1", "label": "Monday" }, { "value": "2", "label": "Tuesday" }, { "value": "3", "label": "Wednesday" },
+      { "value": "4", "label": "Thursday" }, { "value": "5", "label": "Friday" }, { "value": "6", "label": "Saturday" }, { "value": "0", "label": "Sunday" } ] },
+    { "type": "range", "id": "hour", "label": "Drop hour (Budapest)", "min": 0, "max": 23, "step": 1, "default": 11 },
+    { "type": "range", "id": "close_hour", "label": "Show \"today\" until (hour)", "min": 1, "max": 24, "step": 1, "default": 20 },
+    { "type": "url", "id": "link", "label": "Button link" },
+    { "type": "text", "id": "link_label", "label": "Button label", "default": "újdonságok" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#141413" },
+    { "type": "color", "id": "text", "label": "Text", "default": "#F6F3EC" },
+    { "type": "range", "id": "padding", "label": "Padding", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 56 }
+  ],
+  "presets": [{ "name": "Momoko: weekly drop" }]
+}
+{% endschema %}

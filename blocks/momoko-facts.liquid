@@ -1,0 +1,43 @@
+{%- doc -%}
+  Momoko: size on label, who it fits, condition. Reads product metafields
+  custom.size_label, custom.fits, custom.condition (new / excellent / great / good)
+  and the tags "women" / "men" for the fit line.
+{%- enddoc -%}
+{%- liquid
+  assign p = closest.product
+  assign size_label = p.metafields.custom.size_label.value
+  assign fits = p.metafields.custom.fits.value
+  assign condition = p.metafields.custom.condition.value | default: 'great' | downcase | strip
+  assign who = ''
+  if p.tags contains 'women' and p.tags contains 'men'
+    assign who = 'momoko.facts.anyone' | t
+  elsif p.tags contains 'women'
+    assign who = 'momoko.facts.women' | t
+  elsif p.tags contains 'men'
+    assign who = 'momoko.facts.men' | t
+  endif
+  assign cond_key = 'momoko.condition.' | append: condition
+  assign cond_help = 'momoko.condition_help.' | append: condition
+-%}
+<ul class="mv-facts spacing-style" style="{% render 'spacing-style', settings: block.settings %}" {{ block.shopify_attributes }}>
+  {%- if size_label != blank -%}
+    <li><span>{{ 'momoko.facts.size_on_label' | t }}</span><span>{{ size_label }}</span></li>
+  {%- endif -%}
+  {%- if fits != blank -%}
+    <li><span>{{ 'momoko.facts.fits' | t }}</span><span>{{ who }} {{ fits }}{% if block.settings.measure_link %} · <a href="#mv-meas">{{ 'momoko.facts.see_measurements' | t }}</a>{% endif %}</span></li>
+  {%- endif -%}
+  <li><span>{{ 'momoko.facts.condition' | t }}</span><span title="{{ cond_help | t | escape }}">{{ cond_key | t }}</span></li>
+</ul>
+
+{% schema %}
+{
+  "name": "Momoko: size & condition",
+  "tag": null,
+  "settings": [
+    { "type": "checkbox", "id": "measure_link", "label": "Link to measurements", "default": true },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "Momoko: size & condition" }]
+}
+{% endschema %}

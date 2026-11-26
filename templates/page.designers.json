@@ -1,0 +1,7 @@
+{
+  "sections": {
+    "main": { "type": "main-page", "settings": {} },
+    "az": { "type": "momoko-designers", "settings": { "title": "designerek a–z", "style": "az", "limit": 30, "background": "#F6F3EC", "padding": 48 } }
+  },
+  "order": ["az"]
+}

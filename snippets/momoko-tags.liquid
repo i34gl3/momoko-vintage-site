@@ -1,0 +1,22 @@
+{%- doc -%}
+  Badges for a product: new (published within `days`), rare / runway (tags), sold, sale.
+  @param {object} product
+  @param {number} [days] - days a piece counts as new (default 14)
+  @param {object} [block]
+{%- enddoc -%}
+{%- liquid
+  assign days = days | default: 14
+  assign now_s = 'now' | date: '%s' | plus: 0
+  assign pub_s = product.published_at | date: '%s' | plus: 0
+  assign age_days = now_s | minus: pub_s | divided_by: 86400
+-%}
+<span class="mv-tags"{% if block %} {{ block.shopify_attributes }}{% endif %}>
+  {%- if product.available == false -%}
+    <span class="mv-tag">{{ 'momoko.badge.sold' | t }}</span>
+  {%- else -%}
+    {%- if age_days <= days -%}<span class="mv-tag">{{ 'momoko.badge.new' | t }}</span>{%- endif -%}
+    {%- if product.tags contains 'rare' -%}<span class="mv-tag mv-tag--light">{{ 'momoko.badge.rare' | t }}</span>{%- endif -%}
+    {%- if product.tags contains 'runway' -%}<span class="mv-tag mv-tag--light">{{ 'momoko.badge.runway' | t }}</span>{%- endif -%}
+    {%- if product.compare_at_price > product.price -%}<span class="mv-tag mv-tag--red">-{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price }}%</span>{%- endif -%}
+  {%- endif -%}
+</span>

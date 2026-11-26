@@ -1,0 +1,50 @@
+{%- comment -%}
+  Momoko: "try it on in Budapest" band with address, opening hours (today highlighted) and buttons.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="mv-store" id="mv-store-{{ section.id }}" style="background: {{ s.background }}; color: {{ s.text }}; padding: {{ s.padding }}px 1rem;">
+  <h2>{{ s.title }}</h2>
+  {%- if s.subtitle != blank -%}<p class="mv-sub">{{ s.subtitle }}</p>{%- endif -%}
+  <p class="mv-addr">{{ s.address }}</p>
+  <ul>
+    <li data-days="1,2,3,4,5"><span>{{ s.days_1 }}</span><span>{{ s.hours_1 }}</span></li>
+    <li data-days="6"><span>{{ s.days_2 }}</span><span>{{ s.hours_2 }}</span></li>
+    <li data-days="0"><span>{{ s.days_3 }}</span><span>{{ s.hours_3 }}</span></li>
+  </ul>
+  <p class="mv-btns">
+    {%- if s.maps != blank -%}<a class="button" href="{{ s.maps }}" target="_blank" rel="noopener">{{ 'momoko.store.directions' | t }}</a>{%- endif -%}
+    {%- if s.about != blank -%}<a class="button button-secondary" href="{{ s.about }}">{{ 'momoko.store.about' | t }}</a>{%- endif -%}
+  </p>
+</section>
+<script>
+  (function () {
+    var map = {Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6};
+    var d = map[new Intl.DateTimeFormat('en-GB', {timeZone: 'Europe/Budapest', weekday: 'short'}).format(new Date())];
+    document.querySelectorAll('#mv-store-{{ section.id }} li[data-days]').forEach(function (li) {
+      if (li.dataset.days.split(',').indexOf(String(d)) > -1) li.classList.add('is-today');
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Momoko: store band",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "próbáld fel budapesten" },
+    { "type": "text", "id": "subtitle", "label": "Sub-line", "default": "minden online darab a boltban is megnézhető, amíg el nem kel." },
+    { "type": "text", "id": "address", "label": "Address", "default": "1088 Budapest, Krúdy utca 9, Palotanegyed" },
+    { "type": "text", "id": "days_1", "label": "Days 1", "default": "hétfő–péntek" },
+    { "type": "text", "id": "hours_1", "label": "Hours 1", "default": "11:00–20:00" },
+    { "type": "text", "id": "days_2", "label": "Days 2", "default": "szombat" },
+    { "type": "text", "id": "hours_2", "label": "Hours 2", "default": "10:00–19:00" },
+    { "type": "text", "id": "days_3", "label": "Days 3", "default": "vasárnap" },
+    { "type": "text", "id": "hours_3", "label": "Hours 3", "default": "12:00–18:00" },
+    { "type": "text", "id": "maps", "label": "Directions link", "default": "https://www.google.com/maps/search/?api=1&query=Momoko%20Vintage%2C%20Kr%C3%BAdy%20utca%209%2C%201088%20Budapest" },
+    { "type": "url", "id": "about", "label": "About the store link" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#141413" },
+    { "type": "color", "id": "text", "label": "Text", "default": "#F6F3EC" },
+    { "type": "range", "id": "padding", "label": "Padding", "min": 16, "max": 140, "step": 4, "unit": "px", "default": 80 }
+  ],
+  "presets": [{ "name": "Momoko: store band" }]
+}
+{% endschema %}

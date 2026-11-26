@@ -1,0 +1,33 @@
+{%- doc -%}
+  Momoko: the five promises under the add-to-basket button.
+{%- enddoc -%}
+{%- liquid
+  assign s = block.settings
+  assign p = closest.product
+-%}
+<ul class="mv-trust spacing-style" style="{% render 'spacing-style', settings: s %}" {{ block.shopify_attributes }}>
+  {%- if p.available -%}
+    <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M5 21h14M12 6l-7 6h14l-7-6z"/></svg><span>{{ 'momoko.trust.one' | t }}</span></li>
+  {%- endif -%}
+  <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5 9 17.5 20 6.5"/></svg><span>{{ 'momoko.trust.checked' | t }}</span></li>
+  <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9"/></svg><span>{{ 'momoko.trust.shipping' | t: days: s.ship_days }}</span></li>
+  {%- if s.free_over != blank -%}
+    <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 6.5h11v9h-11zM13.5 9.5h4l3 3v3h-7"/><circle cx="6.5" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/></svg><span>{{ 'momoko.trust.free_over' | t: amount: s.free_over }}</span></li>
+  {%- endif -%}
+  <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 9.5 5 4h14l1.5 5.5M4.5 9.5V20h15V9.5M9.5 20v-6h5v6M3.5 9.5h17"/></svg><span>{{ 'momoko.trust.pickup' | t }}</span></li>
+  <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>{{ 'momoko.trust.returns' | t }}</span></li>
+</ul>
+
+{% schema %}
+{
+  "name": "Momoko: promises",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "ship_days", "label": "Ships within (business days)", "default": "2" },
+    { "type": "text", "id": "free_over", "label": "Free shipping over (with currency, empty = hide)", "default": "€250" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 8 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 8 }
+  ],
+  "presets": [{ "name": "Momoko: promises" }]
+}
+{% endschema %}

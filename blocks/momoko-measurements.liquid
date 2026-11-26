@@ -1,0 +1,43 @@
+{%- doc -%}
+  Momoko: measurements table from the metafield custom.measurements
+  (multi-line text, one per line, e.g. "pit to pit: 54"), in cm with inches beside.
+{%- enddoc -%}
+{%- liquid
+  assign raw = closest.product.metafields.custom.measurements.value
+-%}
+{%- if raw != blank -%}
+  <details id="mv-meas" class="mv-meas details spacing-style" style="{% render 'spacing-style', settings: block.settings %}" {% if block.settings.open %}open{% endif %} {{ block.shopify_attributes }}>
+    <summary class="details__header">{{ 'momoko.measurements.title' | t }}<span class="svg-wrapper icon-plus">{{ 'icon-plus.svg' | inline_asset_content }}</span></summary>
+    <div class="details-content">
+      <table>
+        {%- assign lines = raw | newline_to_br | split: '<br />' -%}
+        {%- for line in lines -%}
+          {%- assign parts = line | strip | split: ':' -%}
+          {%- if parts.size > 1 -%}
+            {%- assign label = parts[0] | strip | downcase -%}
+            {%- assign cm = parts[1] | remove: 'cm' | replace: ',', '.' | strip -%}
+            {%- assign label_key = 'momoko.measure.' | append: label | replace: ' ', '_' -%}
+            {%- assign label_t = label_key | t -%}
+            {%- if label_t contains 'translation missing' -%}{%- assign label_t = label -%}{%- endif -%}
+            {%- assign inch = cm | times: 1.0 | divided_by: 2.54 | round: 1 -%}
+            <tr><td>{{ label_t }}</td><td>{{ cm }} cm</td><td class="mv-in">{{ inch }} in</td></tr>
+          {%- endif -%}
+        {%- endfor -%}
+      </table>
+      <p class="mv-note">{{ 'momoko.measurements.note' | t }}</p>
+    </div>
+  </details>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Momoko: measurements",
+  "tag": null,
+  "settings": [
+    { "type": "checkbox", "id": "open", "label": "Open by default", "default": false },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "Momoko: measurements" }]
+}
+{% endschema %}

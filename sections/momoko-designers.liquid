@@ -1,0 +1,48 @@
+{%- comment -%}
+  Momoko: designers. "cloud" shows the designers as one big line of names (home page);
+  "a–z" lists every designer under its first letter (the designers page).
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="mv-designers" style="background: {{ s.background }}; padding: {{ s.padding }}px max(5vw, 16px);">
+  <div style="max-width: 1280px; margin-inline: auto;">
+    <div class="mv-designers__head">
+      <h2>{{ s.title }}</h2>
+      {%- if s.style == 'cloud' and s.all_link != blank -%}<a href="{{ s.all_link }}">{{ 'momoko.designers.all' | t }}</a>{%- endif -%}
+    </div>
+    {%- if s.style == 'cloud' -%}
+      <ul class="mv-designers__list">
+        {%- for vendor in shop.vendors limit: s.limit -%}
+          <li><a href="{{ vendor | url_for_vendor }}">{{ vendor | downcase }}</a></li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <ul class="mv-az">
+        {%- assign current = '' -%}
+        {%- for vendor in shop.vendors -%}
+          {%- assign first = vendor | slice: 0 | upcase -%}
+          {%- if first != current -%}
+            <li class="mv-az__letter"><h3>{{ first }}</h3></li>
+            {%- assign current = first -%}
+          {%- endif -%}
+          <li><a href="{{ vendor | url_for_vendor }}">{{ vendor }}</a></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Momoko: designers",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "designerek" },
+    { "type": "select", "id": "style", "label": "Style", "default": "cloud", "options": [
+      { "value": "cloud", "label": "Big names (home page)" }, { "value": "az", "label": "A–Z list (designers page)" } ] },
+    { "type": "range", "id": "limit", "label": "Names shown (big names)", "min": 6, "max": 60, "step": 2, "default": 30 },
+    { "type": "url", "id": "all_link", "label": "All designers link" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#FFFFFF" },
+    { "type": "range", "id": "padding", "label": "Padding", "min": 16, "max": 140, "step": 4, "unit": "px", "default": 72 }
+  ],
+  "presets": [{ "name": "Momoko: designers" }]
+}
+{% endschema %}

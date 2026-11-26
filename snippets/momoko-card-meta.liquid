@@ -1,0 +1,25 @@
+{%- doc -%}
+  Product card extras: badges, designer above the title, fit line under it.
+  Used from a custom-liquid block in the product card: {% render 'momoko-card-meta', product: closest.product, part: 'top' %}
+  @param {object} product
+  @param {string} part - 'designer' or 'fit' or 'badges'
+{%- enddoc -%}
+{%- liquid
+  assign fits = product.metafields.custom.fits.value
+  assign who = ''
+  if product.tags contains 'women' and product.tags contains 'men'
+    assign who = ''
+  elsif product.tags contains 'women'
+    assign who = 'momoko.facts.women' | t
+  elsif product.tags contains 'men'
+    assign who = 'momoko.facts.men' | t
+  endif
+-%}
+{%- case part -%}
+  {%- when 'designer' -%}
+    <span class="mv-card-meta"><span class="mv-des">{{ product.vendor }}</span></span>
+  {%- when 'fit' -%}
+    {%- if fits != blank -%}<span class="mv-card-meta"><span class="mv-fit">{{ who }} {{ fits }}</span></span>{%- endif -%}
+  {%- when 'badges' -%}
+    {%- render 'momoko-tags', product: product -%}
+{%- endcase -%}
