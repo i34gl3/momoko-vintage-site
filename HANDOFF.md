@@ -70,3 +70,10 @@ Everything needed to continue work on momokovintage.com in a new chat.
 - The owner approves every change: show a preview first, and push to `main` only when he says "deploy". GitHub Actions publishes automatically.
 - Owner preferences: everything lower case except the tagline and address sentences; Courier; no rounded corners; minimal, centred, black/white sections. Check phones at 360–430px for overflow before shipping.
 
+
+## Online shop (/shop/, built Nov 2026, not live until "deploy")
+- Source: one folder per piece in `shop/items/<slug>/` (photos + `info.txt`); owner's how-to in `shop/README.md`, template `shop/minta-info.txt`, company and shipping settings in `shop/settings.txt`.
+- `tools/build_shop.py` crops photos to 4:5 WebP (1080 + 540 grid) into `site/shop/<slug>/`, deletes the originals, and writes the grid, product pages (JSON-LD Product), `/shop/info/` (shipping, returns, ÁSZF summary, privacy, imprint), `/shop/thanks/` and `/shop/sitemap.xml`. Same design tokens as the home page, in `site/shop/shop.css`; `shop.js` does hu/en (remembered in localStorage), filters and the phone photo counter.
+- Checkout: one Stripe Payment Link per piece, limit 1 completed session, EU shipping rate + free store pickup, redirect to /shop/thanks/. `tools/stripe_sync.py` (secret `STRIPE_SECRET_KEY`) creates links, marks a piece sold when its link goes inactive (sold online, or deactivated in the Stripe app after an in-store sale), deactivates the link when `sold: yes` is typed, and replaces the link when the price changes.
+- `.github/workflows/shop.yml` runs on changes under `shop/` and every 15 minutes; when anything changed it commits and starts "Publish website" itself (pushes by the workflow token don't trigger other workflows).
+- Home page: the "online platformokon is hamarosan" box is now an "online bolt" link to /shop/.

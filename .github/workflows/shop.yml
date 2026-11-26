@@ -1,0 +1,55 @@
+name: Update shop
+
+# New or changed pieces in shop/items, and every 15 minutes a check with Stripe
+# for pieces that sold. Publishes the website only when something changed.
+on:
+  push:
+    branches: [main]
+    paths: ["shop/**", "tools/build_shop.py", "tools/stripe_sync.py", "site/shop/shop.css", "site/shop/shop.js"]
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: shop
+  cancel-in-progress: false
+
+jobs:
+  shop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow pillow-heif
+      - name: Prepare new photos
+        run: python tools/build_shop.py --photos-only
+      - name: Sync with Stripe (payment links, sold pieces)
+        env:
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+        run: python tools/stripe_sync.py
+      - name: Build shop pages
+        run: python tools/build_shop.py
+      - name: Save and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A site/shop shop
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+            exit 0
+          fi
+          git commit -m "Bolt frissítése"
+          git pull --rebase origin main
+          git push
+          # pushes made by this workflow don't start other workflows, so start publishing by hand
+          gh workflow run "Publish website" --ref main

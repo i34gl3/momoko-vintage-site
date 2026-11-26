@@ -1,0 +1,18 @@
+# Momoko Vintage online bolt – beállítások
+# A cégadatok az impresszumba kerülnek (kötelező egy webshopnál).
+company: 
+address: 1088 Budapest, Krúdy utca 9.
+tax_number: 
+eu_vat: 
+registration: 
+email: info@momokovintage.com
+phone: +36 30 617 0265
+conciliation_board: budapesti békéltető testülethez
+
+# Szállítás euróban (EU, nyomkövetett csomag). A Magyar Posta MPL Europe Standard 1–2 kg: 9 500 Ft.
+shipping_eu: 25
+# Mely országokba szállítunk (üresen: mind a 27 EU-ország)
+ship_countries: 
+
+# Kategóriák magyar neve a szűrőben (angol=magyar)
+categories_hu: coats=kabátok, jackets=dzsekik, blazers=zakók, knitwear=kötött, dresses=ruhák, skirts=szoknyák, trousers=nadrágok, tops=felsők, shoes=cipők, boots=csizmák, bags=táskák, accessories=kiegészítők

@@ -1,0 +1,16 @@
+# MINTA – másold be egy új darab mappájába info.txt néven, és írd át.
+# Csak a title és a price kötelező. Az angol szöveg a külföldi vevőknek kell.
+title: Beige Gabardine Trench Coat
+designer: Burberry
+price: 280
+gender: women
+category: coats
+size: UK 10 · fits S–M
+condition: great
+era: 1990s
+material: 100% cotton gabardine, check lining
+measurements: pit to pit 54 · length 96 · shoulders 42 · sleeve 60
+flaws: small mark on the inside lining, photo 7
+text_en: Classic 90s trench in sand gabardine with the house check lining. Double-breasted, belted, storm flap and buckled cuffs.
+text_hu: Klasszikus 90-es évekbeli trench homokszínű gabardinból, kockás béléssel. Kétsoros, övvel, csatos mandzsettával.
+sold: no
