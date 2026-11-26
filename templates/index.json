@@ -320,7 +320,7 @@
     "momoko_drop": {
       "type": "momoko-drop",
       "settings": {
-        "title": "heti újratöltés hétfőnként",
+        "title": "új darabok hétfőnként",
         "day": "1",
         "hour": 11,
         "close_hour": 20,
